@@ -1,0 +1,926 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>מרתון תל אביב 2027</title>
+<meta name="description" content="תוכנית האימונים של עמית למרתון תל אביב 2027">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="מרתון">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#F2F5F6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F181C" media="(prefers-color-scheme: dark)">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Rubik:wght@400;500;600&display=swap">
+<style>
+/* Layout: phone app shell. Sticky app bar, one scrolling view, fixed bottom tab bar. Sea-and-shore palette from the existing plan. */
+:root{
+  --bg:#F2F5F6; --surface:#FFFFFF; --ink:#13232B; --muted:#5B6D75; --line:#D6E0E3;
+  --accent:#0E6E8C; --accent-soft:#DCEEF3; --on-accent:#FFFFFF; --race:#C8531F; --race-soft:#FBE7DD;
+  --easy:#3F8F5E; --q:#B8322F; --long:#0E6E8C; --cf:#7A5AA8; --swim:#1C8FB0; --rest:#8A989E;
+  --bar:rgba(242,245,246,.88); --scrim:rgba(10,22,28,.45); --tabh:62px;
+  --f-display:"Secular One","Rubik",Arial,sans-serif; --f-body:"Rubik",Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --bg:#0F181C; --surface:#172329; --ink:#E6EEF1; --muted:#96A8AF; --line:#2A3A41;
+  --accent:#4DB3D3; --accent-soft:#16333D; --on-accent:#0F181C; --race:#F08A5A; --race-soft:#3A2419;
+  --easy:#6CC08B; --q:#EE7471; --long:#4DB3D3; --cf:#A98DD6; --swim:#5CC3E0; --rest:#71838A;
+  --bar:rgba(15,24,28,.88);
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0F181C; --surface:#172329; --ink:#E6EEF1; --muted:#96A8AF; --line:#2A3A41;
+  --accent:#4DB3D3; --accent-soft:#16333D; --on-accent:#0F181C; --race:#F08A5A; --race-soft:#3A2419;
+  --easy:#6CC08B; --q:#EE7471; --long:#4DB3D3; --cf:#A98DD6; --swim:#5CC3E0; --rest:#71838A;
+  --bar:rgba(15,24,28,.88);
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+:root{padding-top:env(safe-area-inset-top,0px)}
+img{max-width:100%}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;direction:rtl;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;margin:0;text-wrap:balance}
+.num{font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate}
+svg{display:block}
+
+/* app bar */
+.appbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bar);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.appbar-in{max-width:640px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.brand{font-family:var(--f-display);font-size:18px;line-height:1.1}
+.brand small{display:block;font-family:var(--f-body);font-size:12px;color:var(--muted)}
+.ring{margin-inline-start:auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+
+main{max-width:640px;margin:0 auto;padding-inline:16px;padding-block:18px 110px;display:grid;gap:20px}
+
+/* day header */
+.dayhead{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;gap:8px;text-align:center}
+.nav{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.nav:disabled{opacity:.35;cursor:default}
+.nav svg{width:20px;height:20px}
+.eyebrow{font-size:12px;letter-spacing:.06em;color:var(--accent);font-weight:600}
+.dayhead h1{font-size:clamp(26px,7vw,32px);line-height:1.15}
+.meta{font-size:13px;color:var(--muted)}
+.back{justify-self:center;font-size:13px;color:var(--accent);border:1px solid var(--accent);border-radius:20px;padding:5px 14px}
+
+/* workout cards */
+.cards{display:grid;gap:10px}
+.wo{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:border-color .2s,background .2s}
+.wo-main{width:100%;text-align:right;display:grid;grid-template-columns:44px 1fr 32px;gap:12px;align-items:center;padding:16px 14px}
+.wo-foot{border-top:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:8px 14px;font-size:13px;min-height:42px}
+.logsum{flex:1;min-width:0;color:var(--ink)}
+.logbtn{display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-weight:500;padding:4px 0;margin-inline-start:auto}
+.logbtn svg{width:16px;height:16px}
+.wo .ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--bg)}
+.wo .ico svg{width:24px;height:24px}
+.wb{display:grid;gap:3px;min-width:0}
+.wk{font-weight:600;font-size:13px}
+.wt{font-size:16px;line-height:1.45}
+.ck{width:32px;height:32px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;color:transparent;transition:background .2s,border-color .2s}
+.ck svg{width:18px;height:18px}
+.wo.done{border-color:var(--easy)}
+.wo.done .wt{color:var(--muted)}
+.wo.done .ck,.row.done .cb{background:var(--easy);border-color:var(--easy);color:var(--surface)}
+.pop .ck,.pop .cb{animation:pop .35s ease-out}
+@keyframes pop{40%{transform:scale(1.25)}}
+.wo.rest .wo-main{grid-template-columns:44px 1fr;cursor:default}
+.wo.racecard{border-color:var(--race);background:var(--race-soft)}
+.wo.racecard.done{border-color:var(--easy)}
+
+.k-easy{color:var(--easy)}.k-q{color:var(--q)}.k-long{color:var(--long)}.k-cf{color:var(--cf)}.k-swim{color:var(--swim)}.k-rest{color:var(--rest)}.k-race{color:var(--race)}
+
+/* week strip */
+.strip{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:8px}
+.sd{display:grid;justify-items:center;gap:3px;padding:6px 0;border-radius:10px;font-size:12px;color:var(--muted)}
+.sd b{font-weight:600;color:var(--ink);font-size:13px}
+.sd i{width:8px;height:8px;border-radius:50%;border:1.5px solid var(--line)}
+.sd.full i{background:var(--easy);border-color:var(--easy)}
+.sd.part i{background:linear-gradient(90deg,var(--easy) 50%,transparent 50%);border-color:var(--easy)}
+.sd.rest i{border-style:dashed}
+.sd.tod b{color:var(--accent)}
+.sd.sel{background:var(--accent);color:var(--on-accent)}
+.sd.sel b{color:var(--on-accent)}
+.sd.sel i{border-color:var(--on-accent)}
+
+/* stats */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:grid;gap:6px;align-content:start;min-width:0}
+.stat small{font-size:12px;color:var(--muted)}
+.stat strong{font-family:var(--f-display);font-weight:400;font-size:24px;line-height:1.1}
+.stat strong span.u{font-family:var(--f-body);font-size:13px;color:var(--muted)}
+.stat.race{background:var(--race-soft);border-color:var(--race)}
+.stat.race strong{color:var(--race)}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:3px}
+
+/* week view */
+.weekhead{display:grid;grid-template-columns:44px 1fr 44px;gap:8px;align-items:center;text-align:center}
+.weekhead h1{font-size:28px}
+.tags{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:4px}
+.tag{font-size:12px;padding:2px 9px;border-radius:20px;background:var(--accent-soft);color:var(--accent)}
+.tag.r{background:var(--race-soft);color:var(--race)}
+.tag.d{border:1px solid var(--line);color:var(--muted);background:transparent}
+.wsum{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted)}
+.wsum .bar{flex:1}
+.days{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.wday{display:grid;grid-template-columns:56px 1fr;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.wday:last-child{border-bottom:0}
+.wday.today{background:var(--accent-soft)}
+.wdn{display:grid;align-content:start;gap:1px;font-size:12px;color:var(--muted);text-align:right}
+.wdn b{color:var(--ink);font-weight:500;font-size:14px}
+.wday.today .wdn b{color:var(--accent)}
+.wits{display:grid;gap:8px;min-width:0}
+.row{width:100%;display:flex;gap:8px;align-items:flex-start}
+.tog{flex:1;min-width:0;display:flex;gap:10px;align-items:flex-start;text-align:right}
+.cb{flex:none;width:22px;height:22px;border-radius:6px;border:2px solid var(--line);display:grid;place-items:center;color:transparent;margin-top:1px}
+.cb svg{width:14px;height:14px}
+.rt{min-width:0;display:grid;gap:2px}
+.row.done .rtx{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line)}
+.rsum{font-size:12px;color:var(--accent)}
+.lg{flex:none;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:var(--muted);border:1px solid var(--line)}
+.lg svg{width:15px;height:15px}
+.lg.has{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+.row.rest{cursor:default;color:var(--muted);gap:10px}
+.row.rest .cb{border-style:dashed;border-color:transparent}
+
+/* plan view */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:grid;gap:12px;min-width:0}
+.panel h2{font-size:20px}
+.big{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.big strong{font-family:var(--f-display);font-weight:400;font-size:34px;line-height:1}
+.big span{color:var(--muted);font-size:14px}
+.ms{display:grid;gap:8px}
+.msr{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:10px 12px;border-radius:12px;background:var(--race-soft)}
+.msr.past{background:var(--bg);color:var(--muted)}
+.msr b{font-weight:500}
+.msr small{color:var(--muted);font-size:12px}
+.msr em{font-style:normal;color:var(--race);font-weight:600;font-size:13px;grid-row:span 2;align-self:center}
+.msr.past em{color:var(--muted)}
+.chart{overflow-x:auto;margin-inline:-4px}
+.chart svg{width:100%;min-width:520px;height:auto}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:10px;height:10px;border-radius:2px}
+.phase{display:grid;gap:8px}
+.phase h3{font-size:16px}
+.phase p{margin:0;font-size:13px;color:var(--muted);max-width:62ch}
+.wrow{width:100%;display:grid;grid-template-columns:auto 1fr auto;gap:4px 12px;align-items:center;text-align:right;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.wrow.cur{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.wrow.racewk{border-color:var(--race)}
+.wrow .wn{font-family:var(--f-display);font-size:16px;min-width:64px}
+.wrow .wd{font-size:12px;color:var(--muted)}
+.wrow .wkm{font-weight:600;font-size:14px}
+.wrow .bar{grid-column:1/-1}
+.foot{font-size:12px;color:var(--muted);margin:0}
+.reset{justify-self:start;font-size:13px;color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:6px 12px}
+.reset.arm,.btn.arm{color:var(--race);border-color:var(--race)}
+
+/* paces */
+table{border-collapse:collapse;width:100%;font-size:14px}
+td,th{padding:8px 4px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top}
+th{font-weight:500;color:var(--muted);font-size:12px}
+tr:last-child td{border-bottom:0}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-inline-end:7px;vertical-align:1px}
+details.rules{background:var(--surface);border:1px solid var(--line);border-radius:16px}
+details.rules summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;font-family:var(--f-display);font-size:18px}
+details.rules summary::-webkit-details-marker{display:none}
+details.rules summary svg{width:18px;height:18px;color:var(--muted);transition:transform .2s}
+details.rules[open] summary svg{transform:rotate(-90deg)}
+details.rules ul{margin:0;padding:0 34px 16px 16px;display:grid;gap:8px;font-size:14px}
+
+/* tab bar */
+.tabs{position:fixed;bottom:0;inset-inline:0;z-index:6;background:var(--bar);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tabs-in{max-width:640px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+.tab{height:var(--tabh);display:grid;justify-items:center;align-content:center;gap:2px;font-size:11px;color:var(--muted)}
+.tab svg{width:24px;height:24px}
+.tab[aria-current="page"]{color:var(--accent);font-weight:600}
+
+/* coach: share + backup */
+.coachhead h1{font-size:28px}
+.steps{margin:0;padding-inline-start:20px;display:grid;gap:6px;font-size:14px}
+.sumbox{font:inherit;font-size:13px;line-height:1.55;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;width:100%;min-height:160px;max-height:300px;resize:vertical;white-space:pre-wrap}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:4px}
+.seg button{border-radius:9px;padding:8px 4px;font-size:13px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.acts .btn.pri{grid-column:auto}
+.toast{position:fixed;inset-inline:16px;bottom:calc(var(--tabh) + 14px + env(safe-area-inset-bottom,0px));z-index:30;max-width:420px;margin:0 auto;background:var(--ink);color:var(--bg);border-radius:12px;padding:10px 14px;font-size:14px;text-align:center;animation:up .2s ease-out}
+.note{font-size:13px;color:var(--muted);margin:0}
+.hint{display:flex;gap:12px;align-items:flex-start;background:var(--accent-soft);border:1px solid var(--accent);border-radius:14px;padding:12px 14px;font-size:13px;color:var(--ink)}
+.hint p{margin:0;flex:1;min-width:0}
+.hint button{flex:none;color:var(--accent);font-weight:600;padding:2px 4px}
+
+/* log sheet */
+.sheet-bg{position:fixed;inset:0;z-index:20;background:var(--scrim);display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--surface);width:100%;max-width:640px;max-height:92%;overflow:auto;border-radius:22px 22px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));display:grid;gap:16px;animation:up .25s ease-out}
+@keyframes up{from{transform:translateY(40px);opacity:.4}}
+.sh-head{display:flex;gap:12px;align-items:flex-start}
+.sh-head > div{flex:1;min-width:0}
+.sh-head h2{font-size:22px}
+.sh-head .iconbtn{border:1px solid var(--line);width:38px;height:38px}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:10px}
+.fl{display:grid;gap:4px;font-size:12px;color:var(--muted);min-width:0}
+input.in,textarea.in{font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+input.in:focus,textarea.in:focus{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
+.pace{font-size:14px;color:var(--accent);font-weight:500;min-height:1.5em}
+.rpe{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+.rpe button{height:38px;border-radius:8px;border:1px solid var(--line);background:var(--bg);font-size:14px}
+.rpe button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.rpe-hint{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px}
+.sh-act{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn{border-radius:12px;padding:12px 14px;font-weight:600;text-align:center}
+.btn.pri{background:var(--accent);color:var(--on-accent);grid-column:1/-1}
+.btn.sec{border:1px solid var(--line)}
+.btn.del{border:1px solid var(--line);color:var(--race)}
+
+@media (max-width:380px){.wo{grid-template-columns:38px 1fr 30px;gap:10px;padding:14px 12px}.wo .ico{width:38px;height:38px}.wt{font-size:15px}.wday{grid-template-columns:46px 1fr;padding-inline:12px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="appbar"><div class="appbar-in">
+  <div class="brand">מרתון תל אביב<small>27.2.2027 · יעד 5:00 לק״מ</small></div>
+  <div class="ring"><span id="ovr" class="num" title="אימונים שבוצעו מכל התוכנית">0%</span></div>
+</div></header>
+
+<main id="main" aria-live="polite"></main>
+
+<nav class="tabs" aria-label="ניווט"><div class="tabs-in">
+  <button class="tab" data-view="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/><circle cx="12" cy="15" r="1.6" fill="currentColor"/></svg>היום</button>
+  <button class="tab" data-view="week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2" fill="currentColor"/><circle cx="4.5" cy="12" r="1.2" fill="currentColor"/><circle cx="4.5" cy="18" r="1.2" fill="currentColor"/></svg>שבוע</button>
+  <button class="tab" data-view="coach"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4A2.5 2.5 0 0 1 4 13.5z"/><path d="M8.5 8.5h7M8.5 11.5h4.5"/></svg>מאמן</button>
+  <button class="tab" data-view="plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20h16M7 16v-4M12 16V7M17 16v-6"/></svg>תוכנית</button>
+  <button class="tab" data-view="pace"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5l3-3M10 3h4M12 3v3"/></svg>קצבים</button>
+</div></nav>
+
+<script>
+const START = new Date(2026, 8, 27);
+const DN = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+const DS = ['א׳','ב׳','ג׳','ד׳','ה׳','ו׳','ש׳'];
+const LONG = {easy:'ריצה קלה',q:'אימון איכות',long:'ריצה ארוכה',cf:'קרוספיט',swim:'שחייה',rest:'מנוחה',race:'תחרות'};
+const CF = ['cf','קרוספיט'], CFL = ['cf','קרוספיט · פלג גוף עליון וליבה, בלי רגליים כבדות'], SW = ['swim','שחייה קלה 1.5–2 ק״מ, אחה״צ'];
+
+function std(sun, tue, thu, sat, opts={}){
+  return [
+    [['easy', sun[1], sun[0]]],
+    [opts.mon || CF],
+    [['q', tue[1], tue[0]]],
+    [opts.wed || CF],
+    [['easy', thu[1], thu[0]]],
+    [opts.fri || CFL],
+    [['long', sat[1], sat[0]], SW]
+  ];
+}
+const W = [
+ {p:0, d:std([4,'4 ק״מ קל'],[7,'4×800 מ׳ ב־4:15, מנוחה 2 דק׳ הליכה/ג׳וג'],[4,'4 ק״מ קל + 4 האצות של 20 שנ׳'],[10,'10 ק״מ קל'])},
+ {p:0, d:std([5,'5 ק״מ קל'],[7,'טמפו 2×2 ק״מ ב־4:45, מנוחה 2 דק׳'],[4,'4 ק״מ קל + 4 האצות'],[11,'11 ק״מ קל'])},
+ {p:0, d:std([5,'5 ק״מ קל'],[8,'5×800 מ׳ ב־4:10–4:15, מנוחה 90 שנ׳'],[5,'5 ק״מ: 2 קל, 3 בקצב 5:00'],[12,'12 ק״מ קל, 2 אחרונים ב־5:10'])},
+ {p:0, tag:'הורדה', d:std([5,'5 ק״מ קל'],[8,'טמפו 2×3 ק״מ ב־4:45, מנוחה 3 דק׳'],[4,'4 ק״מ קל + 4 האצות'],[10,'10 ק״מ קל'])},
+ {p:0, race:true, tag:'ריצת לילה', d:[
+   [['easy','6 ק״מ קל + 4 האצות',6]],
+   [['cf','קרוספיט קל, בלי רגליים']],
+   [['easy','4 ק״מ שחרור קל מאוד',4]],
+   [['race','ריצת הלילה 15 ק״מ. יעד: 1:12 או מהר יותר (4:48 לק״מ). מתחילים ב־4:55 ומאיצים מק״מ 10',15]],
+   [['rest','מנוחה']],
+   [['cf','קרוספיט קל']],
+   [['long','10 ק״מ קל מאוד',10], SW]
+ ]},
+ {p:1, d:std([6,'6 ק״מ קל'],[7,'7 ק״מ קל + 6 האצות (שבוע התאוששות מהתחרות)'],[6,'6 ק״מ קל'],[14,'14 ק״מ קל'])},
+ {p:1, d:std([6,'6 ק״מ קל'],[9,'6×800 מ׳ ב־4:10–4:15, מנוחה 90 שנ׳'],[6,'6 ק״מ קל'],[15,'15 ק״מ קל'])},
+ {p:1, d:std([7,'7 ק״מ קל'],[11,'טמפו 3×3 ק״מ ב־4:45, מנוחה 2 דק׳'],[6,'6 ק״מ קל + 4 האצות'],[16,'16 ק״מ קל'])},
+ {p:1, tag:'הורדה', d:std([6,'6 ק״מ קל'],[9,'5×1 ק״מ ב־4:15–4:20, מנוחה 2 דק׳'],[5,'5 ק״מ קל'],[14,'14 ק״מ קל'])},
+ {p:1, d:std([7,'7 ק״מ קל'],[11,'טמפו 2×4 ק״מ ב־4:45, מנוחה 3 דק׳'],[8,'8 ק״מ: 4 קל, 4 בקצב 5:10'],[18,'18 ק״מ קל'])},
+ {p:1, d:std([8,'8 ק״מ קל'],[11,'8×800 מ׳ ב־4:10–4:15, מנוחה 90 שנ׳'],[8,'8 ק״מ קל + 6 האצות'],[21,'21 ק״מ, 5 אחרונים ב־5:10'])},
+ {p:1, d:std([8,'8 ק״מ קל'],[12,'טמפו רציף 8 ק״מ ב־4:50'],[8,'8 ק״מ קל'],[24,'24 ק״מ קל'])},
+ {p:1, tag:'הורדה', d:std([7,'7 ק״מ קל'],[10,'6×1 ק״מ ב־4:15, מנוחה 2 דק׳'],[7,'7 ק״מ קל'],[16,'16 ק״מ קל'])},
+ {p:2, d:std([8,'8 ק״מ קל'],[13,'טמפו 3×3 ק״מ ב־4:40–4:45, מנוחה 2 דק׳'],[9,'9 ק״מ: 4 קל, 5 בקצב 5:05'],[26,'26 ק״מ, 8 אחרונים ב־5:05'])},
+ {p:2, d:std([8,'8 ק״מ קל'],[13,'5×1.6 ק״מ ב־4:25, מנוחה 2 דק׳'],[10,'10 ק״מ: 4 קל, 6 בקצב 5:00'],[28,'28 ק״מ, ק״מ 14–24 ב־5:05, סיום קל'])},
+ {p:2, d:std([8,'8 ק״מ קל'],[14,'טמפו רציף 10 ק״מ ב־4:50'],[9,'9 ק״מ קל + 6 האצות'],[30,'30 ק״מ קל. תרגול תזונה: ג׳ל כל 35–40 דק׳'])},
+ {p:2, d:std([8,'8 ק״מ קל'],[13,'טמפו 2×5 ק״מ ב־4:45, מנוחה 3 דק׳'],[8,'8 ק״מ קל'],[32,'32 ק״מ, ק״מ 16–28 ב־5:00. חזרה גנרלית: נעליים, ביגוד וג׳לים של יום התחרות'])},
+ {p:2, race:true, tag:'משחה הים האדום', d:[
+   [['easy','7 ק״מ קל מאוד, התאוששות מה־32',7]],
+   [['cf','קרוספיט בעוצמה בינונית']],
+   [['q','6×1 ק״מ ב־4:15, מנוחה 2 דק׳',11]],
+   [['cf','קרוספיט בעוצמה בינונית']],
+   [['long','16 ק״מ: 10 קל, 6 בקצב 5:00 (הארוכה הוקדמה בגלל המשחה)',16]],
+   [['rest','מנוחה מלאה, בלי קרוספיט']],
+   [['race','משחה הים האדום 4 ק״מ, אילת. יעד: 1:47 (2:40 ל־100 מ׳). 500 ראשונים ב־2:45, אחר כך 2:40 יציב']]
+ ]},
+ {p:2, tag:'לפני החצי', d:[
+   [['easy','8 ק״מ קל',8]],
+   [CF],
+   [['q','5×1 ק״מ ב־4:15, מנוחה 2 דק׳',10]],
+   [CF],
+   [['easy','6 ק״מ קל + 4 האצות',6]],
+   [['cf','קרוספיט קל מאוד או מנוחה']],
+   [['long','12 ק״מ קל, 3 ק״מ אחרונים ב־5:00',12], SW]
+ ]},
+ {p:2, race:true, tag:'חצי ים המלח', d:[
+   [['race','חצי מרתון ים המלח. יעד: 1:41 או מהר יותר (4:47 לק״מ). ב־1:41 ומטה, 5:00 במרתון ריאלי. מעל 1:44 מכוונים ל־5:10',21]],
+   [['rest','מנוחה או הליכה']],
+   [['easy','6 ק״מ קל מאוד',6]],
+   [CF],
+   [['easy','10 ק״מ: 4 קל, 6 בקצב מרתון',10]],
+   [CFL],
+   [['long','26 ק״מ, 10 אחרונים בקצב מרתון (האחרונה הארוכה)',26], SW]
+ ]},
+ {p:3, tag:'טייפר', d:std([8,'8 ק״מ קל'],[10,'טמפו 3×2 ק״מ ב־4:45, מנוחה 2 דק׳'],[8,'8 ק״מ: 3 קל, 5 בקצב מרתון'],[18,'18 ק״מ, 8 אחרונים בקצב מרתון'],{mon:['cf','קרוספיט בעוצמה בינונית'],wed:['cf','קרוספיט בעוצמה בינונית, בלי רגליים כבדות'],fri:['rest','מנוחה']})},
+ {p:3, race:true, tag:'מרתון', d:[
+   [['easy','6 ק״מ קל + 4 האצות',6]],
+   [['cf','קרוספיט קל מאוד: ניידות וליבה בלבד']],
+   [['q','8 ק״מ: 2 קל, 3×1 ק״מ בקצב מרתון, קל',8]],
+   [['rest','מנוחה. מתחילים להעמיס פחמימות']],
+   [['easy','5 ק״מ קל + 4 האצות קצרות',5]],
+   [['rest','מנוחה. הכנת ציוד, ארוחת פסטה מוקדמת']],
+   [['race','מרתון תל אביב. ק״מ 1–5 ב־5:05, אחר כך 5:00. ג׳ל כל 35–40 דק׳, מים בכל תחנה',42]]
+ ]}
+];
+const SWIMS = ['מבחן CSS: 400 ו־200 מ׳ על זמן (1.6 ק״מ). תוצאה: CSS 2:14','8×100 ב־2:19 (CSS+5), מנוחה 15 שנ׳ + 800 רצוף ב־2:25 (2 ק״מ)','4×200 ב־2:14 (CSS), מנוחה 20 שנ׳ + 1200 רצוף ב־2:25 (2.4 ק״מ)','2.5 ק״מ רצוף, בים אם אפשר (ים 2:45 / בריכה 2:25)','1.5 ק״מ קל','5×200 בקצב CSS + 1000 רצוף (2.5 ק״מ)','3×400 בקצב CSS+3 + 1000 רצוף (2.8 ק״מ)','10×100 בקצב CSS + 1400 רצוף (3 ק״מ)','3 ק״מ רצוף, ק״מ אחרון בקצב תחרות (בריכה 2:20 / ים 2:40)','2×800 ב־2:20, מנוחה 30 שנ׳ + 800 רצוף ב־2:25 (3 ק״מ)','6×200 בקצב CSS + 700 קל (2.5 ק״מ)','2 ק״מ קל + תרגילי טכניקה','חזרה גנרלית: 4 ק״מ רצוף בים ב־2:40–2:45','2 ק״מ קל','3×500 ב־2:20 בבריכה או 2:40 בים (2.5 ק״מ)','2 ק״מ קל','1.5 ק״מ קל מאוד או מנוחה',null,null,'1.5 ק״מ קל','1.5 ק״מ קל',null];
+W.forEach((w,i) => {
+  const sat = w.d[6];
+  const si = sat.findIndex(it => it[0]==='swim');
+  if (si > -1) { if (SWIMS[i]) sat[si] = ['swim', SWIMS[i]]; else sat.splice(si,1); }
+  else if (SWIMS[i]) sat.push(['swim', SWIMS[i]]);
+  if (i !== 4) w.d[3].unshift(['swim', i===21 ? 'אימון טכניקה קל בבוקר' : 'אימון טכניקה בבוקר']);
+});
+const PH = [
+ {n:'שלב 1 · בסיס וריצת הלילה', s:'בסיס', w:'שבועות 1–5', t:'בונים נפח בהדרגה מ־22 לכ־30 ק״מ בשבוע, עם אימון איכות אחד שמכוון ל־15 ק״מ ב־28.10.'},
+ {n:'שלב 2 · בניית נפח', s:'בניית נפח', w:'שבועות 6–13', t:'הנפח עולה ל־44–52 ק״מ והארוכה מגיעה ל־24 ק״מ. שבוע הורדה כל 3–4 שבועות.'},
+ {n:'שלב 3 · עבודה ספציפית למרתון', s:'ספציפי למרתון', w:'שבועות 14–20', t:'ארוכות של 26–32 ק״מ, משחה הים האדום בשבוע 18 ותרגול תזונה בריצה. החצי בים המלח הוא המבחן.'},
+ {n:'שלב 4 · טייפר', s:'טייפר', w:'שבועות 21–22', t:'מורידים נפח ושומרים על קצת עוצמה. מגיעים רעננים לקו הזינוק.'}
+];
+const RACE_NAMES = {4:'ריצת הלילה · 15 ק״מ', 17:'משחה הים האדום · 4 ק״מ', 19:'חצי מרתון ים המלח', 21:'מרתון תל אביב'};
+
+const ICO = {
+  easy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg>',
+  q:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></svg>',
+  long:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 19c3-1 4-4 7-7s5-5 7-7"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/></svg>',
+  cf:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6.5 7v10M17.5 7v10M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/></svg>',
+  swim:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 14c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2M2 19c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/><circle cx="15" cy="6.5" r="2"/></svg>',
+  rest:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  race:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4h12l-2.5 4L17 12H5"/></svg>'
+};
+const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+const CHEV_R = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
+const CHEV_L = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>';
+
+const NW = W.length;
+const DAY = 864e5;
+const today = new Date(); today.setHours(0,0,0,0);
+const weekStart = wi => { const s = new Date(START); s.setDate(s.getDate() + wi*7); return s; };
+const dayDate = (wi, di) => { const d = weekStart(wi); d.setDate(d.getDate() + di); return d; };
+const fmt = d => d.getDate() + '.' + (d.getMonth()+1);
+function posOf(date){
+  const diff = Math.round((date - START) / DAY);
+  if (diff < 0) return {wi:0, di:0};
+  let wi = Math.floor(diff/7), di = diff - wi*7;
+  if (wi >= NW) return {wi:NW-1, di:6};
+  return {wi, di};
+}
+const TP = posOf(today);
+const inPlan = Math.round((today - START)/DAY) >= 0 && Math.round((today - START)/DAY) < NW*7;
+const isToday = (wi, di) => inPlan && wi === TP.wi && di === TP.di;
+
+function items(wi, di){ return W[wi].d[di].map((it, ii) => ({k:it[0], t:it[1], km:it[2]||0, id:`w${wi}d${di}i${ii}`})); }
+let TOTAL = 0, TOTALKM = 0;
+W.forEach((w, wi) => w.d.forEach((_, di) => items(wi, di).forEach(it => { if (it.k !== 'rest') TOTAL++; TOTALKM += it.km; })));
+
+const RACES = [];
+W.forEach((w, wi) => w.d.forEach((_, di) => items(wi, di).forEach(it => { if (it.k === 'race') RACES.push({wi, di, name: RACE_NAMES[wi] || w.tag, date: dayDate(wi, di)}); })));
+
+/* ---------- storage (this device only) ---------- */
+const esc = t => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let storageOk = true;
+try { localStorage.setItem('tlv27probe', '1'); localStorage.removeItem('tlv27probe'); } catch(e) { storageOk = false; }
+function makeDoc(key, empty){
+  let data = empty();
+  try { const v = JSON.parse(localStorage.getItem(key) || 'null'); if (v && typeof v === 'object' && !Array.isArray(v)) data = v; } catch(e) {}
+  const d = {key, data};
+  d.save = () => {
+    try { localStorage.setItem(key, JSON.stringify(d.data)); localStorage.setItem('tlv27saved', String(Date.now())); }
+    catch(e) { toast('השמירה נכשלה. כדאי לייצא גיבוי.'); }
+  };
+  return d;
+}
+const DONE = makeDoc('tlv27', () => ({}));
+const LOGS = makeDoc('tlv27log', () => ({}));
+// Ask the browser not to clear this app's data under storage pressure (Chrome/Android honours it; harmless elsewhere).
+try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch(e) {}
+
+/* ---------- state ---------- */
+const VIEWS = ['today','week','coach','plan','pace'];
+let view = 'today';
+try { const v = localStorage.getItem('tlv27view'); if (VIEWS.includes(v)) view = v; } catch(e) {}
+let selW = TP.wi, selD = TP.di, viewW = TP.wi, justId = null;
+
+// Running km for a ticked workout: the logged distance when there is one, otherwise the planned distance.
+function actualKm(it){
+  if (!it.km) return 0;
+  const lg = LOGS.data[it.id], d = lg && parseFloat(lg.dist);
+  return d > 0 && d < 100 ? d : it.km;
+}
+function weekStats(wi){
+  let plan = 0, done = 0, n = 0, c = 0;
+  W[wi].d.forEach((_, di) => items(wi, di).forEach(it => {
+    if (it.k !== 'rest') { n++; if (DONE.data[it.id]) c++; }
+    plan += it.km; if (DONE.data[it.id]) done += actualKm(it);
+  }));
+  return {plan, done, n, c};
+}
+function overall(){
+  let c = 0, km = 0;
+  W.forEach((w, wi) => w.d.forEach((_, di) => items(wi, di).forEach(it => { if (DONE.data[it.id]) { if (it.k !== 'rest') c++; km += actualKm(it); } })));
+  return {c, km};
+}
+function dayState(wi, di){
+  const its = items(wi, di).filter(i => i.k !== 'rest');
+  if (!its.length) return 'rest';
+  const d = its.filter(i => DONE.data[i.id]).length;
+  return d === its.length ? 'full' : d ? 'part' : '';
+}
+function relLabel(d){
+  const diff = Math.round((d - today)/DAY);
+  if (diff === 0) return 'היום';
+  if (diff === 1) return 'מחר';
+  if (diff === -1) return 'אתמול';
+  return diff > 0 ? `בעוד ${diff} ימים` : `לפני ${-diff} ימים`;
+}
+const pct = (a, b) => b ? Math.round(a/b*100) : 0;
+const kmTxt = n => (Math.round(n*10)/10).toString();
+
+/* ---------- results ---------- */
+function parseId(id){ const m = /^w(\d+)d(\d+)i(\d+)$/.exec(id); return m ? {wi:+m[1], di:+m[2], ii:+m[3]} : null; }
+function itemById(id){ const p = parseId(id); if (!p) return null; const it = items(p.wi, p.di)[p.ii]; return it ? {...it, ...p} : null; }
+function logType(it){ if (it.k === 'swim' || (it.k === 'race' && !it.km)) return 'swim'; if (it.k === 'cf') return 'cf'; return 'run'; }
+function parseTime(s){
+  s = String(s || '').trim().replace(/[.,]/g, ':'); if (!s) return 0;
+  const p = s.split(':').map(Number); if (p.some(isNaN)) return 0;
+  return p.length === 3 ? p[0]*3600 + p[1]*60 + p[2] : p.length === 2 ? p[0]*60 + p[1] : p[0]*60;
+}
+function fmtDur(sec){
+  sec = Math.round(sec); const h = Math.floor(sec/3600), m = Math.floor(sec%3600/60), s = sec%60;
+  return h ? `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}` : `${m}:${String(s).padStart(2,'0')}`;
+}
+function paceOf(type, dist, time){
+  const sec = parseTime(time), d = parseFloat(String(dist).replace(',', '.'));
+  if (!sec || !d) return '';
+  return type === 'swim' ? fmtDur(sec / (d/100)) + ' ל־100 מ׳' : fmtDur(sec / d) + ' לק״מ';
+}
+function logParts(it, lg){
+  const t = logType(it), out = [];
+  if (lg.dist) out.push(t === 'swim' ? `${lg.dist} מ׳` : `${lg.dist} ק״מ`);
+  if (lg.time) out.push(lg.dist ? `ב־${lg.time}` : lg.time);
+  const pc = paceOf(t, lg.dist, lg.time); if (pc) out.push(pc);
+  if (lg.hr) out.push(`דופק ${lg.hr}`);
+  if (lg.rpe) out.push(`מאמץ ${lg.rpe}/10`);
+  return out;
+}
+const logSummary = (it, lg) => logParts(it, lg).join(' · ') || (lg.note ? 'הערה נשמרה' : '');
+const logText = (it, lg) => logParts(it, lg).join(', ') + (lg.note ? `. הערות: ${lg.note}` : '');
+
+/* ---------- views ---------- */
+const PLUS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
+const PEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>';
+function card(it){
+  if (it.k === 'rest') return `<div class="wo rest"><div class="wo-main"><span class="ico k-rest">${ICO.rest}</span><span class="wb"><span class="wk k-rest">מנוחה</span><span class="wt">${it.t === 'מנוחה' ? 'יום מנוחה. שינה טובה, אוכל ומתיחות קלות.' : it.t}</span></span></div></div>`;
+  const done = !!DONE.data[it.id], lg = LOGS.data[it.id];
+  return `<div class="wo${done ? ' done' : ''}${it.k === 'race' ? ' racecard' : ''}">
+    <button class="wo-main${justId === it.id ? ' pop' : ''}" data-id="${it.id}" aria-pressed="${done}">
+      <span class="ico k-${it.k}">${ICO[it.k]}</span>
+      <span class="wb"><span class="wk k-${it.k}">${LONG[it.k]}${it.km ? ` · <span class="num">${it.km}</span> ק״מ` : ''}</span><span class="wt">${it.t}</span></span>
+      <span class="ck">${CHECK}</span></button>
+    <div class="wo-foot">${lg ? `<span class="logsum">${esc(logSummary(it, lg))}</span><button class="logbtn" data-log="${it.id}">${PEN}עריכה</button>` : `<button class="logbtn" data-log="${it.id}">${PLUS}רישום תוצאה</button>`}</div>
+  </div>`;
+}
+function showMoveHint(){
+  if (Object.keys(DONE.data).length || Object.keys(LOGS.data).length) return false;
+  try { return !localStorage.getItem('tlv27hint'); } catch(e) { return false; }
+}
+function vToday(){
+  const d = dayDate(selW, selD), w = W[selW], st = weekStats(selW);
+  const first = selW === 0 && selD === 0, last = selW === NW-1 && selD === 6;
+  let h = `<section class="dayhead">
+    <button class="nav" data-act="dprev" aria-label="יום קודם" ${first ? 'disabled' : ''}>${CHEV_R}</button>
+    <div><div class="eyebrow">${relLabel(d)}</div><h1>יום ${DN[selD]} <span class="num">${fmt(d)}</span></h1>
+    <div class="meta">שבוע <span class="num">${selW+1}</span> מתוך <span class="num">${NW}</span> · ${PH[w.p].s}${w.tag ? ' · ' + w.tag : ''}</div></div>
+    <button class="nav" data-act="dnext" aria-label="יום הבא" ${last ? 'disabled' : ''}>${CHEV_L}</button></section>`;
+  if (!isToday(selW, selD) && inPlan) h += `<button class="back" data-act="gotoday">חזרה להיום</button>`;
+  if (showMoveHint()) h += `<div class="hint"><p>עברת מהגרסה הקודמת? שם, בלשונית ״תוכנית״, לוחצים ״ייצוא גיבוי״. כאן, באותה לשונית, לוחצים ״שחזור מגיבוי״ ובוחרים את הקובץ.</p><button data-act="hintx" aria-label="סגירת ההודעה">הבנתי</button></div>`;
+  h += `<div class="cards">${items(selW, selD).map(card).join('')}</div>`;
+  h += `<div class="strip" role="group" aria-label="ימי השבוע">` + DS.map((s, di) => {
+    const dd = dayDate(selW, di);
+    return `<button class="sd ${dayState(selW, di)}${di === selD ? ' sel' : ''}${isToday(selW, di) ? ' tod' : ''}" data-act="day" data-d="${di}" aria-label="יום ${DN[di]} ${fmt(dd)}"><b>${s}</b><span class="num">${fmt(dd)}</span><i></i></button>`;
+  }).join('') + `</div>`;
+  const nr = RACES.find(r => r.date >= today);
+  let raceStat = '';
+  if (nr) {
+    const days = Math.round((nr.date - today)/DAY);
+    raceStat = `<div class="stat race"><small>${nr.name}</small><strong>${days === 0 ? 'היום!' : `<span class="num">${days}</span> <span class="u">ימים</span>`}</strong><small class="num">${fmt(nr.date)}</small></div>`;
+  }
+  h += `<div class="stats">
+    <div class="stat"><small>ריצה השבוע</small><strong><span class="num">${kmTxt(st.done)}</span> <span class="u">מתוך <span class="num">${st.plan}</span> ק״מ</span></strong><div class="bar"><i style="width:${pct(st.done, st.plan)}%"></i></div></div>
+    ${raceStat || `<div class="stat"><small>אימונים השבוע</small><strong><span class="num">${st.c}/${st.n}</span></strong></div>`}
+  </div>`;
+  return h;
+}
+function vWeek(){
+  const w = W[viewW], s = weekStart(viewW), e = dayDate(viewW, 6), st = weekStats(viewW);
+  const tag = w.tag ? `<span class="tag ${w.race ? 'r' : (w.tag === 'הורדה' ? 'd' : '')}">${w.tag}</span>` : '';
+  const cur = inPlan && viewW === TP.wi ? '<span class="tag">השבוע</span>' : '';
+  let h = `<section class="weekhead">
+    <button class="nav" data-act="wprev" aria-label="שבוע קודם" ${viewW === 0 ? 'disabled' : ''}>${CHEV_R}</button>
+    <div><h1>שבוע <span class="num">${viewW+1}</span></h1><div class="meta"><span class="num">${fmt(s)}–${fmt(e)}</span> · ${PH[w.p].s}</div><div class="tags">${tag}${cur}</div></div>
+    <button class="nav" data-act="wnext" aria-label="שבוע הבא" ${viewW === NW-1 ? 'disabled' : ''}>${CHEV_L}</button></section>
+    <div class="wsum"><span><span class="num">${st.c}/${st.n}</span> אימונים</span><div class="bar"><i style="width:${pct(st.c, st.n)}%"></i></div><span><span class="num">${kmTxt(st.done)}/${st.plan}</span> ק״מ</span></div>
+    <div class="days">`;
+  w.d.forEach((_, di) => {
+    const dd = dayDate(viewW, di);
+    h += `<div class="wday${isToday(viewW, di) ? ' today' : ''}"><button class="wdn" data-act="open" data-w="${viewW}" data-d="${di}" aria-label="פתיחת יום ${DN[di]}"><b>${DN[di]}</b><span class="num">${fmt(dd)}</span></button><div class="wits">`;
+    items(viewW, di).forEach(it => {
+      if (it.k === 'rest') { h += `<div class="row rest"><span class="cb"></span><span class="rt"><span><span class="wk k-rest">מנוחה</span>${it.t === 'מנוחה' ? '' : ' · ' + it.t.replace(/^מנוחה\.?\s*/, '')}</span></span></div>`; return; }
+      const done = !!DONE.data[it.id], lg = LOGS.data[it.id];
+      h += `<div class="row${done ? ' done' : ''}"><button class="tog${justId === it.id ? ' pop' : ''}" data-id="${it.id}" aria-pressed="${done}"><span class="cb">${CHECK}</span><span class="rt"><span class="rtx"><span class="wk k-${it.k}">${LONG[it.k]}</span> · ${it.t}</span>${lg ? `<span class="rsum">${esc(logSummary(it, lg))}</span>` : ''}</span></button><button class="lg${lg ? ' has' : ''}" data-log="${it.id}" aria-label="${lg ? 'עריכת תוצאה' : 'רישום תוצאה'}">${lg ? PEN : PLUS}</button></div>`;
+    });
+    h += `</div></div>`;
+  });
+  return h + `</div>`;
+}
+function chart(){
+  const Wd = 660, H = 210, pl = 30, pr = 6, pt = 16, pb = 26, max = 70;
+  const bw = (Wd - pl - pr) / NW;
+  const y = v => pt + (H - pt - pb) * (1 - v/max);
+  let s = `<svg viewBox="0 0 ${Wd} ${H}" role="img" aria-label="נפח ריצה שבועי: מתוכנן ובוצע">`;
+  [0,20,40,60].forEach(v => { s += `<line x1="${pl}" x2="${Wd-pr}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${pl-6}" y="${y(v)+4}" text-anchor="end" font-size="10" fill="var(--muted)">${v}</text>`; });
+  W.forEach((w, i) => {
+    const st = weekStats(i);
+    const x = Wd - pr - (i+1)*bw + 3, bwi = bw - 6;
+    const col = w.race ? 'var(--race)' : (w.tag === 'הורדה' ? 'var(--rest)' : 'var(--accent)');
+    s += `<rect x="${x}" y="${y(st.plan)}" width="${bwi}" height="${y(0)-y(st.plan)}" rx="2" fill="${col}" fill-opacity=".25"/>`;
+    if (st.done) s += `<rect x="${x}" y="${y(st.done)}" width="${bwi}" height="${y(0)-y(st.done)}" rx="2" fill="${col}"/>`;
+    if (inPlan && i === TP.wi) s += `<rect x="${x-2}" y="${y(st.plan)-2}" width="${bwi+4}" height="${y(0)-y(st.plan)+4}" rx="3" fill="none" stroke="var(--ink)" stroke-width="1.5"/>`;
+    s += `<text x="${x+bwi/2}" y="${y(st.plan)-5}" text-anchor="middle" font-size="9" fill="var(--muted)">${st.plan}</text>`;
+    s += `<text x="${x+bwi/2}" y="${H-9}" text-anchor="middle" font-size="9" fill="var(--muted)">${i+1}</text>`;
+  });
+  return s + '</svg>';
+}
+function vPlan(){
+  const o = overall();
+  let h = `<section class="panel"><h2>התקדמות</h2>
+    <p class="foot">22 שבועות, <span class="num">27.9.2026–27.2.2027</span>. יעד: <span class="num">5:00</span> לק״מ, סיום בסביבות <span class="num">3:31</span>. ארבע ריצות, שלושה קרוספיט ושחייה בשבוע.</p>
+    <div class="big"><strong class="num">${o.c}</strong><span>מתוך <span class="num">${TOTAL}</span> אימונים</span></div>
+    <div class="bar"><i style="width:${pct(o.c, TOTAL)}%"></i></div>
+    <div class="meta"><span class="num">${kmTxt(o.km)}</span> ק״מ ריצה מתוך <span class="num">${TOTALKM}</span></div></section>`;
+  h += `<section class="panel"><h2>תחרויות</h2><div class="ms">` + RACES.map(r => {
+    const days = Math.round((r.date - today)/DAY);
+    const st = days < 0 ? 'עבר' : days === 0 ? 'היום' : `עוד <span class="num">${days}</span> ימים`;
+    return `<div class="msr${days < 0 ? ' past' : ''}"><b>${r.name}</b><em>${st}</em><small>יום ${DN[r.di]} <span class="num">${fmt(r.date)}</span> · שבוע <span class="num">${r.wi+1}</span></small></div>`;
+  }).join('') + `</div></section>`;
+  h += `<section class="panel"><h2>נפח שבועי</h2><div class="chart">${chart()}</div>
+    <div class="legend"><span><i style="background:var(--accent)"></i>בוצע</span><span><i style="background:var(--accent);opacity:.25"></i>מתוכנן</span><span><i style="background:var(--rest)"></i>הורדה</span><span><i style="background:var(--race)"></i>תחרות</span></div></section>`;
+  PH.forEach((ph, pi) => {
+    h += `<section class="phase"><h3>${ph.n}</h3><p>${ph.w} · ${ph.t}</p>`;
+    W.forEach((w, wi) => {
+      if (w.p !== pi) return;
+      const st = weekStats(wi), s = weekStart(wi);
+      const tag = w.tag ? `<span class="tag ${w.race ? 'r' : (w.tag === 'הורדה' ? 'd' : '')}">${w.tag}</span>` : '';
+      h += `<button class="wrow${inPlan && wi === TP.wi ? ' cur' : ''}${w.race ? ' racewk' : ''}" data-act="wk" data-w="${wi}">
+        <span class="wn">שבוע <span class="num">${wi+1}</span></span>
+        <span class="wd"><span class="num">${fmt(s)}–${fmt(dayDate(wi,6))}</span> ${tag}</span>
+        <span class="wkm"><span class="num">${st.plan}</span> ק״מ</span>
+        <span class="bar"><i style="width:${pct(st.c, st.n)}%"></i></span></button>`;
+    });
+    h += `</section>`;
+  });
+  h += backupPanel();
+  return h;
+}
+
+/* ---------- coach (the app prepares an update to share with the coach) ---------- */
+const HEAD = 'עדכון מאפליקציית האימונים · מרתון תל אביב 2027';
+const curWeek = () => inPlan ? TP.wi : (today < START ? 0 : NW-1);
+function todayLine(){
+  return `היום: יום ${DN[today.getDay()]} ${fmt(today)}.${today.getFullYear()}${inPlan ? `, שבוע ${TP.wi+1} מתוך ${NW} (${PH[W[TP.wi].p].s}${W[TP.wi].tag ? ', ' + W[TP.wi].tag : ''})` : ''}`;
+}
+function planLine(wi, di){
+  return items(wi, di).map(it => {
+    let s = `${LONG[it.k]}: ${it.t}`;
+    if (it.k === 'rest') return s;
+    if (DONE.data[it.id]) s += ' [בוצע]'; else if (dayDate(wi, di) < today) s += ' [לא סומן כבוצע]';
+    const lg = LOGS.data[it.id]; if (lg) s += ` → בפועל: ${logText(it, lg)}`;
+    return s;
+  }).join(' | ');
+}
+function weekBlock(wi, label){
+  if (wi < 0 || wi >= NW) return '';
+  const w = W[wi], st = weekStats(wi);
+  let s = `${label}: שבוע ${wi+1} (${fmt(weekStart(wi))}–${fmt(dayDate(wi,6))}), ${PH[w.p].s}${w.tag ? ', ' + w.tag : ''}. ריצה: ${kmTxt(st.done)} מתוך ${st.plan} ק״מ, ${st.c}/${st.n} אימונים סומנו\n`;
+  w.d.forEach((_, di) => { s += `- ${DN[di]} ${fmt(dayDate(wi, di))}: ${planLine(wi, di)}\n`; });
+  return s;
+}
+function lastLogId(){
+  let best = null, bt = -1;
+  Object.keys(LOGS.data).forEach(id => { const t = LOGS.data[id].ts || 0; if (itemById(id) && t > bt) { bt = t; best = id; } });
+  return best;
+}
+function resultMsg(id){
+  const it = itemById(id), lg = LOGS.data[id];
+  if (!it || !lg) return '';
+  const d = dayDate(it.wi, it.di);
+  return `${HEAD}\n${todayLine()}\n\nתוצאה מהאימון של יום ${DN[it.di]} ${fmt(d)} (שבוע ${it.wi+1}):\n${LONG[it.k]}. מתוכנן: ${it.t}\nבפועל: ${logText(it, lg)}\n\n${weekBlock(curWeek(), 'השבוע')}\nמה דעתך?`;
+}
+function weekMsg(){
+  const cw = curWeek();
+  const body = [weekBlock(cw-1, 'שבוע שעבר'), weekBlock(cw, 'השבוע'), weekBlock(cw+1, 'שבוע הבא')].filter(Boolean).join('\n');
+  return `${HEAD}\n${todayLine()}\n\n${body}\nאיך נראה השבוע ומה כדאי לשים לב אליו?`;
+}
+function fullMsg(){
+  const cw = curWeek();
+  let s = `${HEAD}\n${todayLine()}\n\nסיכום שבועות עד עכשיו:\n`;
+  for (let wi = 0; wi <= cw; wi++) {
+    const st = weekStats(wi);
+    s += `- שבוע ${wi+1} (${fmt(weekStart(wi))}–${fmt(dayDate(wi,6))})${W[wi].tag ? ', ' + W[wi].tag : ''}: ${kmTxt(st.done)}/${st.plan} ק״מ ריצה, ${st.c}/${st.n} אימונים\n`;
+  }
+  const logs = Object.keys(LOGS.data).map(id => ({id, it: itemById(id)})).filter(x => x.it)
+    .sort((a, b) => (a.it.wi*7 + a.it.di) - (b.it.wi*7 + b.it.di));
+  if (logs.length) {
+    s += `\nכל התוצאות שנרשמו:\n` + logs.map(x => `- ${DN[x.it.di]} ${fmt(dayDate(x.it.wi, x.it.di))} (שבוע ${x.it.wi+1}), ${LONG[x.it.k]}: מתוכנן ${x.it.t} → בפועל: ${logText(x.it, LOGS.data[x.id])}`).join('\n') + '\n';
+  }
+  s += `\n${weekBlock(cw, 'השבוע')}${weekBlock(cw+1, 'שבוע הבא')}\nתסתכל על התמונה הכללית: איפה אני ביחס לתוכנית ולמטרות?`;
+  return s;
+}
+let cmode = 'week';
+const MODES = [['last','אימון אחרון'],['week','השבוע'],['full','מההתחלה']];
+function coachText(){
+  if (cmode === 'last') { const id = lastLogId(); return id ? resultMsg(id) : ''; }
+  return cmode === 'full' ? fullMsg() : weekMsg();
+}
+const canShare = !!navigator.share;
+function vCoach(){
+  const t = coachText();
+  return `<section class="coachhead"><h1>המאמן</h1><p class="meta">כאן מכינים עדכון מסודר על האימונים, ושולחים אותו לשיחה עם המאמן.</p></section>
+  <section class="panel">
+    <div class="seg" role="group" aria-label="מה לשלוח">${MODES.map(m => `<button data-act="mode" data-m="${m[0]}" aria-pressed="${cmode === m[0]}">${m[1]}</button>`).join('')}</div>
+    ${t ? `<textarea class="sumbox" id="sumbox" readonly aria-label="העדכון שיישלח">${esc(t)}</textarea>
+    <div class="acts">${canShare ? '<button class="btn pri" data-act="share">שיתוף</button><button class="btn sec" data-act="copy">העתקה</button>' : '<button class="btn pri" data-act="copy" style="grid-column:1/-1">העתקה</button>'}</div>`
+    : `<p class="note">עוד לא נרשמה תוצאה. בכרטיס האימון לוחצים על ״רישום תוצאה״, ואז אפשר לשלוח אותה מכאן.</p>`}
+    <p class="note">אפשר לצרף לשיחה גם צילום מסך מהשעון. המאמן יקרא ממנו את הנתונים.</p>
+  </section>
+  <section class="panel"><h2>איך זה עובד</h2>
+    <ol class="steps">
+      <li>בוחרים מה לשלוח: אימון אחרון, השבוע או הכל מההתחלה.</li>
+      <li>${canShare ? 'לוחצים ״שיתוף״ ובוחרים את האפליקציה שבה המאמן נמצא.' : 'לוחצים ״העתקה״.'} אפשר גם להעתיק ולהדביק בשיחה.</li>
+      <li>המאמן מזהה את העדכון ועונה לפי התוכנית והקצבים.</li>
+    </ol>
+  </section>`;
+}
+let toastT = null;
+function toast(m){
+  let el = document.getElementById('toast');
+  if (!el) { el = document.createElement('div'); el.id = 'toast'; el.className = 'toast'; el.setAttribute('role', 'status'); document.body.appendChild(el); }
+  el.textContent = m; el.hidden = false;
+  clearTimeout(toastT); toastT = setTimeout(() => { el.hidden = true; }, 2800);
+}
+async function copyText(t){
+  try { await navigator.clipboard.writeText(t); toast('הועתק. עכשיו להדביק בשיחה עם המאמן.'); return; } catch(e) {}
+  const b = document.getElementById('sumbox');
+  let ok = false;
+  if (b) { b.removeAttribute('readonly'); b.focus(); b.select(); try { b.setSelectionRange(0, b.value.length); ok = document.execCommand('copy'); } catch(e) {} b.setAttribute('readonly', ''); }
+  toast(ok ? 'הועתק. עכשיו להדביק בשיחה עם המאמן.' : 'לא הצלחתי להעתיק. אפשר לסמן את הטקסט ולהעתיק ידנית.');
+}
+async function shareText(t){
+  if (navigator.share) {
+    try { await navigator.share({text: t}); return; }
+    catch(e) { if (e && e.name === 'AbortError') return; }
+  }
+  copyText(t);
+}
+
+/* ---------- backup ---------- */
+const pad2 = n => String(n).padStart(2, '0');
+function lastBackupText(){
+  let t = 0; try { t = +localStorage.getItem('tlv27backup') || 0; } catch(e) {}
+  if (!t) return 'עוד לא נעשה גיבוי.';
+  const d = new Date(t), days = Math.floor((Date.now() - t) / DAY);
+  return `גיבוי אחרון: ${fmt(d)}.${d.getFullYear()}${days >= 7 ? ` (לפני ${days} ימים, כדאי לגבות שוב)` : ''}.`;
+}
+function markBackup(){ try { localStorage.setItem('tlv27backup', String(Date.now())); } catch(e) {} toast('הגיבוי נשמר'); if (view === 'plan') render(); }
+async function exportBackup(){
+  const name = `marathon-backup-${today.getFullYear()}-${pad2(today.getMonth()+1)}-${pad2(today.getDate())}.json`;
+  const json = JSON.stringify({app: 'tlv27', v: 1, exported: new Date().toISOString(), done: DONE.data, logs: LOGS.data});
+  const blob = new Blob([json], {type: 'application/json'});
+  try {
+    const f = new File([blob], name, {type: 'application/json'});
+    if (navigator.canShare && navigator.canShare({files: [f]})) { await navigator.share({files: [f], title: name}); markBackup(); return; }
+  } catch(e) { if (e && e.name === 'AbortError') return; }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  markBackup();
+}
+function importBackup(file){
+  const r = new FileReader();
+  r.onload = () => {
+    let j = null;
+    try { j = JSON.parse(r.result); } catch(e) {}
+    const okObj = v => v && typeof v === 'object' && !Array.isArray(v);
+    if (!j || j.app !== 'tlv27' || !okObj(j.done) || !okObj(j.logs)) { toast('הקובץ הזה לא נראה כמו גיבוי של האפליקציה.'); return; }
+    DONE.data = j.done; LOGS.data = j.logs; DONE.save(); LOGS.save();
+    render(); toast(`שוחזרו ${Object.keys(j.done).length} סימונים ו־${Object.keys(j.logs).length} תוצאות`);
+  };
+  r.onerror = () => toast('לא הצלחתי לקרוא את הקובץ.');
+  r.readAsText(file);
+}
+function backupPanel(){
+  return `<section class="panel"><h2>גיבוי</h2>
+    <p class="foot">${storageOk ? 'הסימונים והתוצאות נשמרים רק בטלפון הזה. כדאי לייצא גיבוי פעם בשבוע ולשמור אותו בקבצים או בדרייב.' : '<b>הדפדפן הזה לא מאפשר לשמור נתונים.</b> כל מה שתסמן יימחק כשתסגור את הדף. כדאי לפתוח את האפליקציה ב־Safari או ב־Chrome, לא בחלון פרטי.'} ${lastBackupText()}</p>
+    <div class="acts"><button class="btn sec" data-act="export">ייצוא גיבוי</button><button class="btn sec" data-act="import">שחזור מגיבוי</button></div>
+    <input type="file" id="impin" accept="application/json,.json" hidden>
+    <button class="reset" data-act="reset">איפוס כל הסימונים</button></section>`;
+}
+
+const PACE_HTML = `
+<section class="panel"><h2>קצבי ריצה</h2>
+  <table>
+    <tr><th>סוג ריצה</th><th>קצב לק״מ</th></tr>
+    <tr><td><span class="dot" style="background:var(--easy)"></span>קלה / התאוששות</td><td class="num">5:40–6:10</td></tr>
+    <tr><td><span class="dot" style="background:var(--long)"></span>ארוכה (החלק הקל)</td><td class="num">5:35–6:00</td></tr>
+    <tr><td><span class="dot" style="background:var(--race)"></span>קצב מרתון</td><td><span class="num">5:10</span> עד דצמבר, <span class="num">5:00</span> מינואר</td></tr>
+    <tr><td><span class="dot" style="background:var(--q)"></span>טמפו</td><td class="num">4:40–4:50</td></tr>
+    <tr><td><span class="dot" style="background:var(--q)"></span>אינטרוולים 800 מ׳–1 ק״מ</td><td class="num">4:10–4:20</td></tr>
+  </table>
+  <p class="foot">הקצבים מתעדכנים לפי התוצאות בריצת הלילה ובחצי ים המלח. ק״מ של אימוני איכות כוללים חימום ושחרור של 2–3 ק״מ.</p>
+</section>
+<section class="panel"><h2>קצבי שחייה ל־100 מ׳</h2>
+  <table>
+    <tr><th>סוג שחייה</th><th>בריכה</th><th>ים</th></tr>
+    <tr><td>קל / התאוששות</td><td class="num">2:30+</td><td class="num">2:50+</td></tr>
+    <tr><td>רצוף</td><td class="num">2:25</td><td class="num">2:45</td></tr>
+    <tr><td>CSS (סף)</td><td class="num">2:14</td><td>–</td></tr>
+    <tr><td>קצב יעד לתחרות</td><td class="num">2:20</td><td class="num">2:40</td></tr>
+  </table>
+  <p class="foot">נקודת מוצא: 2.9 ק״מ באילת (5.9) בקצב <span class="num">2:59</span> ל־100 מ׳. מבחן CSS בבריכה (3.10): 400 מ׳ ב־<span class="num">8:48</span> (<span class="num">2:12</span>) ו־200 מ׳ ב־<span class="num">4:20</span> (<span class="num">2:10</span>), כלומר CSS של <span class="num">2:14</span>. יעד למשחה הים האדום ב־30.1: <span class="num">1:47</span>, כלומר <span class="num">2:40</span> ל־100 מ׳ בים. היעד ייבדק שוב בשחייה בים בשבוע 4 ובחזרה הגנרלית ב־26.12.</p>
+  <p class="foot">בים איטי בכ־20 שניות ל־100 מ׳ לעומת בריכה: אין קירות לדחיפה, צריך להרים ראש לכיוון ויש גלים. בגלל המשחה, הריצה הארוכה של 32 ק״מ הוקדמה לשבוע 17, ושבוע 18 הוא שבוע הורדה בריצה.</p>
+</section>
+<section class="panel"><h2>שבוע רגיל</h2>
+  <table>
+    <tr><td>ראשון</td><td><span class="wk k-easy">ריצה קלה</span></td></tr>
+    <tr><td>שני</td><td><span class="wk k-cf">קרוספיט</span></td></tr>
+    <tr><td>שלישי</td><td><span class="wk k-q">אימון איכות</span> (אינטרוולים / טמפו)</td></tr>
+    <tr><td>רביעי</td><td><span class="wk k-swim">טכניקת שחייה</span> בבוקר + <span class="wk k-cf">קרוספיט</span> בערב</td></tr>
+    <tr><td>חמישי</td><td><span class="wk k-easy">ריצה בינונית</span>, לפעמים עם קטע בקצב מרתון</td></tr>
+    <tr><td>שישי</td><td><span class="wk k-cf">קרוספיט</span> בלי רגליים כבדות</td></tr>
+    <tr><td>שבת</td><td><span class="wk k-long">ריצה ארוכה</span> בבוקר + <span class="wk k-swim">שחייה</span> אחה״צ</td></tr>
+  </table>
+</section>
+<details class="rules"><summary>כללים לקרוספיט ולשחייה ${CHEV_L}</summary>
+  <ul>
+    <li><b>קרוספיט בשישי ולא בשבת.</b> ארוכה, שחייה וקרוספיט באותו יום זה יותר מדי, ואחרי ארוכה של 25 ק״מ ומעלה הרגליים לא יהיו שם. אם שישי לא מתאים, אפשר להעביר לחמישי בערב.</li>
+    <li><b>שחייה:</b> טכניקה ברביעי בבוקר, והאימון העיקרי בשבת אחה״צ (סטים בקצב CSS, שחיות רצופות, וחזרה גנרלית של 4 ק״מ ב־26.12). בשבתות עם ארוכה של 24 ק״מ ומעלה השחייה קלה.</li>
+    <li><b>קרוספיט בשישי בלי עבודת רגליים כבדה</b> (סקוואט כבד, קפיצות בנפח גבוה, ריצות בתוך WOD). הדגש על פלג גוף עליון, ליבה ושרשרת אחורית קלה.</li>
+    <li><b>מדצמבר (שבוע 11 והלאה)</b> מורידים עוצמה ברגליים בכל הקרוספיט: משקלים בינוניים, בלי חזרות עד כשל.</li>
+    <li><b>לא עושים קרוספיט ביום של ריצת איכות,</b> ויום לפני אימון איכות לא עושים רגליים קשות.</li>
+    <li><b>שבועות הורדה (4, 9, 13, 18):</b> גם הקרוספיט בעוצמה בינונית.</li>
+    <li><b>כאב שלא עובר אחרי יום מנוחה:</b> מחליפים את הריצה הבאה בשחייה או במנוחה, ולא ״משלימים״ אחר כך.</li>
+  </ul>
+</details>`;
+
+/* ---------- result sheet ---------- */
+let sheetId = null, sheetRpe = 0;
+function openLog(id){
+  const it = itemById(id); if (!it) return;
+  sheetId = id;
+  const lg = LOGS.data[id] || {}, t = logType(it);
+  sheetRpe = lg.rpe || 0;
+  const d = dayDate(it.wi, it.di);
+  const fields = t === 'cf' ? `<label class="fl">משך<input class="in" id="f-time" placeholder="למשל 60:00" inputmode="numeric"></label>`
+    : `<label class="fl">${t === 'swim' ? 'מרחק (מ׳)' : 'מרחק (ק״מ)'}<input class="in" id="f-dist" inputmode="decimal" placeholder="${t === 'swim' ? '2000' : (it.km || 5)}"></label>
+       <label class="fl">זמן<input class="in" id="f-time" inputmode="numeric" placeholder="${t === 'swim' ? '48:30' : '28:30'}"></label>
+       <label class="fl">דופק ממוצע<input class="in" id="f-hr" inputmode="numeric" placeholder="145"></label>`;
+  const el = document.createElement('div');
+  el.className = 'sheet-bg'; el.id = 'sheetbg';
+  el.innerHTML = `<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-t">
+    <div class="sh-head"><div><div class="eyebrow">יום ${DN[it.di]} <span class="num">${fmt(d)}</span> · שבוע <span class="num">${it.wi+1}</span></div><h2 id="sh-t" class="k-${it.k}">${LONG[it.k]}</h2><p class="meta">מתוכנן: ${it.t}</p></div>
+      <button class="iconbtn" data-sh="close" aria-label="סגירה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="fields">${fields}</div>
+    ${t === 'cf' ? '' : '<div class="pace" id="f-pace"></div>'}
+    <div><div class="fl">מאמץ (1–10)</div><div class="rpe" id="f-rpe">${Array.from({length:10}, (_, i) => `<button data-rpe="${i+1}" aria-pressed="${sheetRpe === i+1}">${i+1}</button>`).join('')}</div><div class="rpe-hint"><span>קל מאוד</span><span>מקסימלי</span></div></div>
+    <label class="fl">הערות<textarea class="in" id="f-note" rows="3" placeholder="איך הרגיש, ספליטים, כאבים, חום, רוח"></textarea></label>
+    <div class="sh-act"><button class="btn pri" data-sh="send">שמירה ושליחה למאמן</button><button class="btn sec" data-sh="save">שמירה</button>${LOGS.data[id] ? '<button class="btn del" data-sh="del">מחיקת התוצאה</button>' : ''}</div>
+  </div>`;
+  document.body.appendChild(el);
+  document.body.style.overflow = 'hidden';
+  const set = (i, v) => { const x = document.getElementById(i); if (x && v != null) x.value = v; };
+  set('f-dist', lg.dist); set('f-time', lg.time); set('f-hr', lg.hr); set('f-note', lg.note);
+  const upPace = () => { const p = document.getElementById('f-pace'); if (!p) return; const dv = document.getElementById('f-dist'), tv = document.getElementById('f-time'); const pc = paceOf(t, dv.value, tv.value); p.textContent = pc ? 'קצב: ' + pc : ''; };
+  upPace();
+  el.addEventListener('input', upPace);
+  el.addEventListener('click', e => {
+    if (e.target === el) return closeLog();
+    const r = e.target.closest('[data-rpe]');
+    if (r) { const v = +r.dataset.rpe; sheetRpe = sheetRpe === v ? 0 : v; el.querySelectorAll('[data-rpe]').forEach(b => b.setAttribute('aria-pressed', +b.dataset.rpe === sheetRpe)); return; }
+    const a = e.target.closest('[data-sh]'); if (!a) return;
+    const act = a.dataset.sh;
+    if (act === 'close') closeLog();
+    else if (act === 'del') { delete LOGS.data[sheetId]; LOGS.save(); closeLog(); render(); }
+    else saveLog(act === 'send');
+  });
+}
+function closeLog(){ const el = document.getElementById('sheetbg'); if (el) el.remove(); document.body.style.overflow = ''; sheetId = null; }
+function saveLog(send){
+  const id = sheetId, it = itemById(id); if (!it) return;
+  const g = i => { const x = document.getElementById(i); return x ? x.value.trim() : ''; };
+  const lg = {};
+  const dist = g('f-dist').replace(',', '.'); if (dist && !isNaN(parseFloat(dist))) lg.dist = String(parseFloat(dist));
+  const time = g('f-time'); if (time && parseTime(time)) lg.time = fmtDur(parseTime(time));
+  const hr = g('f-hr'); if (hr && +hr) lg.hr = String(Math.round(+hr));
+  if (sheetRpe) lg.rpe = sheetRpe;
+  const note = g('f-note'); if (note) lg.note = note.slice(0, 1000);
+  const has = Object.keys(lg).length;
+  if (has) { lg.ts = Date.now(); LOGS.data[id] = lg; } else delete LOGS.data[id];
+  LOGS.save();
+  if (has && !DONE.data[id]) { DONE.data[id] = true; DONE.save(); justId = id; }
+  closeLog();
+  if (send && has) {
+    cmode = 'last'; go('coach');
+    shareText(resultMsg(id));   // still inside the tap, so the share sheet is allowed to open
+  } else render();
+}
+
+/* ---------- shell ---------- */
+const main = document.getElementById('main');
+function render(){
+  main.innerHTML = view === 'today' ? vToday() : view === 'week' ? vWeek() : view === 'plan' ? vPlan() : view === 'coach' ? vCoach() : PACE_HTML;
+  document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-current', t.dataset.view === view ? 'page' : 'false'));
+  document.getElementById('ovr').textContent = pct(overall().c, TOTAL) + '%';
+  justId = null;
+}
+function go(v){
+  view = v; try { localStorage.setItem('tlv27view', v); } catch(e) {}
+  render(); window.scrollTo(0, 0);
+}
+function step(n){
+  let i = selW*7 + selD + n;
+  i = Math.max(0, Math.min(NW*7 - 1, i));
+  selW = Math.floor(i/7); selD = i % 7; render();
+}
+document.querySelector('.tabs').addEventListener('click', e => {
+  const b = e.target.closest('[data-view]'); if (!b) return;
+  if (b.dataset.view === 'week' && view !== 'week') viewW = selW;
+  go(b.dataset.view);
+});
+main.addEventListener('change', e => {
+  if (e.target.id !== 'impin') return;
+  const f = e.target.files && e.target.files[0]; e.target.value = '';
+  if (f) importBackup(f);
+});
+let armT = null;
+main.addEventListener('click', e => {
+  const lgb = e.target.closest('[data-log]');
+  if (lgb) { openLog(lgb.dataset.log); return; }
+  const t = e.target.closest('[data-id],[data-act]'); if (!t) return;
+  if (t.dataset.id) {
+    const id = t.dataset.id;
+    if (DONE.data[id]) delete DONE.data[id]; else { DONE.data[id] = true; justId = id; if (navigator.vibrate) try { navigator.vibrate(12); } catch(_) {} }
+    DONE.save(); render(); return;
+  }
+  const a = t.dataset.act;
+  if (a === 'dprev') step(-1);
+  else if (a === 'dnext') step(1);
+  else if (a === 'gotoday') { selW = TP.wi; selD = TP.di; render(); }
+  else if (a === 'day') { selD = +t.dataset.d; render(); }
+  else if (a === 'wprev') { viewW = Math.max(0, viewW-1); render(); }
+  else if (a === 'wnext') { viewW = Math.min(NW-1, viewW+1); render(); }
+  else if (a === 'wk') { viewW = +t.dataset.w; go('week'); }
+  else if (a === 'open') { selW = +t.dataset.w; selD = +t.dataset.d; go('today'); }
+  else if (a === 'mode') { cmode = t.dataset.m; render(); }
+  else if (a === 'share') { const b = document.getElementById('sumbox'); if (b) shareText(b.value); }
+  else if (a === 'copy') { const b = document.getElementById('sumbox'); if (b) copyText(b.value); }
+  else if (a === 'export') { exportBackup(); }
+  else if (a === 'hintx') { try { localStorage.setItem('tlv27hint', '1'); } catch(e) {} render(); }
+  else if (a === 'import') {
+    const has = Object.keys(DONE.data).length || Object.keys(LOGS.data).length;
+    if (!has || t.classList.contains('arm')) { clearTimeout(armT); t.classList.remove('arm'); t.textContent = 'שחזור מגיבוי'; document.getElementById('impin').click(); }
+    else { t.classList.add('arm'); t.textContent = 'ללחוץ שוב: יחליף את מה שיש עכשיו'; armT = setTimeout(() => { t.classList.remove('arm'); t.textContent = 'שחזור מגיבוי'; }, 4000); }
+  }
+  else if (a === 'reset') {
+    if (t.classList.contains('arm')) { clearTimeout(armT); DONE.data = {}; DONE.save(); render(); }
+    else { t.classList.add('arm'); t.textContent = 'ללחוץ שוב כדי למחוק הכל'; armT = setTimeout(() => { t.classList.remove('arm'); t.textContent = 'איפוס כל הסימונים'; }, 3000); }
+  }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && sheetId) closeLog(); });
+render();
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
+}
+</script>
+</body>
+</html>
