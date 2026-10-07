@@ -257,6 +257,61 @@ input.in:focus,textarea.in:focus{outline:2px solid var(--accent);outline-offset:
 .gatt button{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center}
 .gatt button svg{width:14px;height:14px}
 
+/* several screenshots: a row of thumbnails, each removable */
+.thumbs{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.thumb{position:relative;width:60px;height:60px;flex:none}
+.thumb img{width:60px;height:60px;object-fit:cover;border-radius:10px;border:1px solid var(--line);display:block}
+.thumb button{position:absolute;top:-7px;inset-inline-end:-7px;width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center}
+.thumb button svg{width:12px;height:12px}
+.addthumb{width:60px;height:60px;border-radius:10px;border:1.5px dashed var(--accent);color:var(--accent);display:grid;place-items:center}
+.addthumb svg{width:22px;height:22px}
+.thumbs .cnt{font-size:12px;color:var(--muted)}
+
+/* coach chat: the athlete's bubbles start at the right edge, the coach's at the left, like a Hebrew messenger */
+.chathead{display:flex;align-items:flex-start;gap:10px}
+.chathead > div{flex:1;min-width:0}
+.chathead h1,.coachhead h1{font-size:28px}
+.newbtn{flex:none;font-size:13px;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:6px 12px;margin-top:4px}
+.newbtn.arm{color:var(--race);border-color:var(--race)}
+.chat{display:grid;gap:10px}
+.msg{max-width:88%;min-width:0;padding:10px 13px;border-radius:16px;font-size:15px;line-height:1.55;overflow-wrap:anywhere}
+.msg.u{justify-self:start;background:var(--accent);color:var(--on-accent);border-end-start-radius:6px;white-space:pre-wrap}
+.msg.a{justify-self:end;background:var(--surface);border:1px solid var(--line);border-end-end-radius:6px}
+.msg p{margin:0 0 6px}.msg p:last-child{margin-bottom:0}
+.msg ul,.msg ol{margin:2px 0 8px;padding-inline-start:20px;display:grid;gap:3px}
+.msg ul:last-child,.msg ol:last-child{margin-bottom:0}
+.imgtag{display:flex;align-items:center;gap:5px;font-size:12px;opacity:.9;margin-bottom:4px}
+.imgtag svg{width:14px;height:14px}
+.think{color:var(--muted);display:inline-flex;gap:4px;align-items:center;min-height:1.5em}
+.think i{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:blink 1.2s infinite ease-in-out}
+.think i:nth-child(2){animation-delay:.2s}.think i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.cut{font-size:12px;color:var(--muted);margin-top:6px}
+.cerr{justify-self:end;max-width:88%;font-size:13px;color:var(--race);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.cerr button{color:var(--accent);font-weight:500;border:1px solid var(--accent);border-radius:20px;padding:3px 12px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:20px;padding:7px 13px;font-size:13px;color:var(--ink)}
+.chip:active{background:var(--accent-soft)}
+.composer{position:sticky;bottom:calc(var(--tabh) + env(safe-area-inset-bottom,0px) + 10px);z-index:4;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:6px;display:grid;gap:8px;box-shadow:0 6px 20px rgba(10,22,28,.12)}
+.composer .thumbs{padding:8px 8px 0}
+.crow{display:flex;gap:4px;align-items:flex-end}
+.cin{flex:1;min-width:0;font:inherit;font-size:16px;line-height:1.4;border:0;background:transparent;color:var(--ink);resize:none;max-height:140px;padding:9px 8px}
+.cin:focus{outline:none}
+.cin::placeholder{color:var(--muted)}
+.cbtn{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--muted)}
+.cbtn.go{background:var(--accent);color:var(--on-accent)}
+.cbtn svg{width:20px;height:20px}
+details.more{background:var(--surface);border:1px solid var(--line);border-radius:16px}
+details.more summary{list-style:none;cursor:pointer;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;font-weight:500;font-size:15px}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary svg{width:18px;height:18px;color:var(--muted);transition:transform .2s}
+details.more[open] summary svg{transform:rotate(-90deg)}
+details.more .mbody{padding:0 16px 16px;display:grid;gap:12px}
+.keyin{font-family:ui-monospace,Menlo,monospace;font-size:14px!important;direction:ltr;text-align:left}
+.kerr{font-size:13px;color:var(--race);margin:0}
+.kok{font-size:13px;color:var(--easy);margin:0}
+select.in{font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+.steps a{color:var(--accent)}
 @media (max-width:380px){.wo{grid-template-columns:38px 1fr 30px;gap:10px;padding:14px 12px}.wo .ico{width:38px;height:38px}.wt{font-size:15px}.wday{grid-template-columns:46px 1fr;padding-inline:12px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -646,7 +701,11 @@ function vPlan(){
   return h;
 }
 
-/* ---------- coach (the app prepares an update to share with the coach) ---------- */
+/* ---------- coach ---------- */
+const CAM = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-2.5h6L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.3"/></svg>';
+const XS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+// Screenshots can also travel to a chat app through the phone's share sheet, together with the update text.
+const canShareFiles = !!navigator.canShare && (() => { try { return navigator.canShare({files: [new File(['x'], 'g.png', {type: 'image/png'})]}); } catch(e) { return false; } })();
 const HEAD = 'עדכון מאפליקציית האימונים · מרתון תל אביב 2027';
 const curWeek = () => inPlan ? TP.wi : (today < START ? 0 : NW-1);
 function todayLine(){
@@ -706,26 +765,328 @@ function coachText(){
   return cmode === 'full' ? fullMsg() : weekMsg();
 }
 const canShare = !!navigator.share;
-let coachImg = null, coachImgUrl = '';
-function vCoach(){
+const coachImgs = [];     // screenshots for the manual share
+const chatImgs = [];      // screenshots for the in-app coach
+// Manual route: prepare an update and share it to a chat with the coach.
+function manualInner(){
   const t = coachText();
-  return `<section class="coachhead"><h1>המאמן</h1><p class="meta">כאן מכינים עדכון מסודר על האימונים, ושולחים אותו לשיחה עם המאמן.</p></section>
-  <section class="panel">
-    <div class="seg" role="group" aria-label="מה לשלוח">${MODES.map(m => `<button data-act="mode" data-m="${m[0]}" aria-pressed="${cmode === m[0]}">${m[1]}</button>`).join('')}</div>
+  return `<div class="seg" role="group" aria-label="מה לשלוח">${MODES.map(m => `<button data-act="mode" data-m="${m[0]}" aria-pressed="${cmode === m[0]}">${m[1]}</button>`).join('')}</div>
     ${t ? `<textarea class="sumbox" id="sumbox" readonly aria-label="העדכון שיישלח">${esc(t)}</textarea>
-    ${canShareFiles ? (coachImg ? `<div class="gatt"><img src="${coachImgUrl}" alt="צילום המסך מהגרמין"><span>הצילום יישלח יחד עם העדכון.</span><button data-act="cimgx" aria-label="הסרת הצילום">${XS}</button></div>` : `<button class="gbtn" data-act="cimg">${CAM}צירוף צילום מסך מהגרמין</button>`) + '<input type="file" id="cimgin" accept="image/*" hidden>' : ''}
+    ${canShareFiles ? (coachImgs.length ? thumbsHtml(coachImgs, 'data-act="cimgx" data-i', 'data-act="cimg"', 'יישלחו יחד עם העדכון') : `<button class="gbtn" data-act="cimg">${CAM}צירוף צילומי מסך מהגרמין</button>`) + '<input type="file" id="cimgin" accept="image/*" multiple hidden>' : ''}
     <div class="acts">${canShare ? '<button class="btn pri" data-act="share">שיתוף</button><button class="btn sec" data-act="copy">העתקה</button>' : '<button class="btn pri" data-act="copy" style="grid-column:1/-1">העתקה</button>'}</div>`
     : `<p class="note">עוד לא נרשמה תוצאה. בכרטיס האימון לוחצים על ״רישום תוצאה״, ואז אפשר לשלוח אותה מכאן.</p>`}
-    <p class="note">${canShareFiles ? 'בשיתוף בוחרים ב־Claude, והעדכון והצילום נכנסים לשיחה חדשה. המאמן קורא מהצילום מרחק, זמן, דופק וספליטים.' : 'אפשר לצרף לשיחה גם צילום מסך מהשעון. המאמן יקרא ממנו את הנתונים.'}</p>
-  </section>
-  <section class="panel"><h2>איך זה עובד</h2>
+    <p class="note">${canShareFiles ? 'בשיתוף בוחרים את האפליקציה שבה המאמן נמצא, והעדכון והצילומים נכנסים לשיחה.' : 'אפשר לצרף לשיחה גם צילומי מסך מהשעון.'}</p>`;
+}
+
+/* ---------- coach inside the app: the athlete's own Anthropic API key, kept on this phone only ---------- */
+const MODELS = [['claude-sonnet-5-5', 'Sonnet 5.5 · מאוזן (מומלץ)'], ['claude-haiku-4-5-20251001', 'Haiku 4.5 · מהיר וזול'], ['claude-opus-5-5', 'Opus 5.5 · הכי חזק, יקר יותר']];
+const lsGet = k => { try { return localStorage.getItem(k) || ''; } catch(e) { return ''; } };
+const lsSet = (k, v) => { try { if (v) localStorage.setItem(k, v); else localStorage.removeItem(k); } catch(e) {} };
+let apiKey = lsGet('tlv27key');
+let model = lsGet('tlv27model'); if (!MODELS.some(m => m[0] === model)) model = MODELS[0][0];
+let keyErr = '', keyBusy = false, keyEdit = false;
+
+const COACH_RULES = `אתה המאמן האישי של עמית, ואתה עונה לו בתוך אפליקציית האימונים שלו בטלפון. הוא מתאמן למרתון תל אביב (27.2.2027, יעד 5:00 לק״מ, סיום בסביבות 3:31), עושה קרוספיט 3 פעמים בשבוע ושוחה לקראת משחה בים האדום. שעון Garmin עם רצועת דופק HRM-Dual.
+
+איך לענות:
+- עברית טבעית, ישירה ומקצועית, כמו מאמן שמכיר אותו. בלי הקדמות ובלי לחזור על השאלה.
+- קצר: בדרך כלל עד 120 מילים. בלי כותרות. רשימה רק כשיש כמה צעדים. **הדגשה** במשורה. מספרים מדויקים (קצב, ק״מ, דופק).
+- הנתונים מהאפליקציה שבסוף ההנחיות הם מקור האמת למה שבוצע. ״לא סומן כבוצע״ יכול להיות גם ״ביצע ולא סימן״; אם זה משנה את התשובה, שאל. אל תמציא מה הוא ביצע. אם חסר, בקש שירשום תוצאה בכרטיס האימון.
+- כשמצורפים צילומי מסך מהשעון (אפשר כמה, למשל סקירה, הקפות וסטטיסטיקה של אותו אימון), קרא מהם מרחק, זמן, קצב ממוצע, דופק ממוצע ומקסימלי, ספליטים, ובשחייה קצב ל־100 מ׳. חבר את המידע מכל הצילומים לתמונה אחת. אם לא ברור איזה אימון זה, מצא לפי התאריך בתוכנית.
+- תוצאה של אימון: השווה למתוכנן ולקצבי היעד. אמור מה טוב ומה לשים לב אליו. ריצה קלה מהירה מדי (מתחת ל־5:40) היא טעות נפוצה, ותגיד את זה. באימון איכות בלי ספליטים, בקש צילום של לשונית ״הקפות״. אם צריך לשנות משהו באימונים הקרובים, הצע שינוי קונקרטי: יום, מרחק, קצב.
+- שבוע או סיכום: נפח מול מתוכנן, עקביות (מה פוספס ולמה זה משנה או לא), סימני עומס (דופק עולה בקצב קבוע, מאמץ גבוה בריצות קלות, הערות על עייפות או כאב), ומה הדגש לשבוע הקרוב.
+- אל תשנה את התוכנית בלי סיבה. העדף שינויים קטנים, ושמור על אימון איכות אחד וארוכה אחת בשבוע. אימון שפוספס לא ״משלימים״. ארוכה שפוספסה אפשר להזיז ליום הקל הבא רק אם אין למחרת אימון איכות.
+- אחרי תחרות, בדוק את הקצבים מול התוצאה. בחצי ים המלח: 1:41 ומטה, 5:00 במרתון ריאלי. מעל 1:44, מכוונים ל־5:10.
+- אם חסר נתון חשוב (דופק, איך הרגיש), שאל שאלה אחת.
+
+כאב ובריאות: אל תאבחן. כאב חד, כאב שמשנה את צורת הריצה, נפיחות, או כאב שלא עובר אחרי יום מנוחה: מחליפים את הריצה הבאה בשחייה או במנוחה ופונים לפיזיותרפיסט או לרופא. כאב בחזה, סחרחורת או קוצר נשימה חריג: מפסיקים מיד ופונים לרופא. מחלה עם חום: לא מתאמנים עד יום אחרי שהחום ירד.
+
+תחרויות ויעדים:
+- ריצת הלילה בתל אביב 15 ק״מ, רביעי 28.10.2026: 1:12 או מהר יותר (4:48). מתחילים ב־4:55 ומאיצים מק״מ 10.
+- משחה הים האדום 4 ק״מ, אילת, שבת 30.1.2027: 1:47 (2:40 ל־100 מ׳). 500 ראשונים ב־2:45, אחר כך 2:40. נקודת מוצא: 2.9 ק״מ באילת ב־5.9 בקצב 2:59.
+- חצי מרתון ים המלח, ראשון 7.2.2027: 1:41 או מהר יותר (4:47). המבחן לקצב המרתון.
+- מרתון תל אביב, שבת 27.2.2027: ק״מ 1–5 ב־5:05, אחר כך 5:00. ג׳ל כל 35–40 דק׳, מים בכל תחנה.
+
+קצבי ריצה לק״מ: קלה/התאוששות 5:40–6:10 · ארוכה (החלק הקל) 5:35–6:00 · קצב מרתון 5:10 עד דצמבר, 5:00 מינואר · טמפו 4:40–4:50 · אינטרוולים 800 מ׳–1 ק״מ 4:10–4:20. ק״מ של אימוני איכות כוללים חימום ושחרור של 2–3 ק״מ.
+קצבי שחייה ל־100 מ׳ (בריכה/ים): קל 2:30+/2:50+ · רצוף 2:25/2:45 · CSS 2:14 (מבחן 3.10.2026: 400 מ׳ ב־8:48, 200 מ׳ ב־4:20) · קצב תחרות 2:20/2:40. בים איטי בכ־20 שניות.
+
+שבוע רגיל: ראשון ריצה קלה · שני טכניקת שחייה בבוקר וקרוספיט · שלישי אימון איכות · רביעי קרוספיט · חמישי ריצה בינונית · שישי קרוספיט בלי רגליים כבדות · שבת ארוכה בבוקר ושחייה אחה״צ. (בשבועות 1–2 ובשבוע ריצת הלילה הטכניקה ברביעי.)
+כללים לקרוספיט ולשחייה: קרוספיט בשישי ולא בשבת (אפשר להעביר לחמישי בערב). בשישי בלי עבודת רגליים כבדה (סקוואט כבד, קפיצות בנפח גבוה, ריצות בתוך WOD). לא עושים קרוספיט ביום של ריצת איכות, ויום לפני אימון איכות לא עושים רגליים קשות. משבוע 11 משקלים בינוניים ברגליים, בלי חזרות עד כשל. בשבועות הורדה (4, 9, 13, 18) גם הקרוספיט בעוצמה בינונית. בשבתות עם ארוכה של 24 ק״מ ומעלה השחייה קלה. הארוכה של 32 הוקדמה לשבוע 17 בגלל המשחה.`;
+
+function contextText(){
+  const cw = curWeek();
+  let s = `מצב נוכחי מהאפליקציה\n${todayLine()}\n\nהתוכנית המלאה עם מה שסומן ונרשם (כל שבוע מתחיל ביום ראשון):\n`;
+  for (let wi = 0; wi < NW; wi++) s += weekBlock(wi, wi === cw ? 'השבוע' : wi < cw ? 'עבר' : 'בהמשך');
+  return s;
+}
+
+const CHAT = makeDoc('tlv27chat', () => ({m: []}));
+if (!Array.isArray(CHAT.data.m)) CHAT.data.m = [];
+CHAT.data.m = CHAT.data.m.filter(x => x && (x.r === 'u' || x.r === 'a') && x.t);
+let busy = false, ctl = null, draft = '', cErr = '', cErrRetry = false, newArm = null;
+let retryBlocks = null;   // image blocks of the last question, kept for "try again"
+
+const SEND = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>';
+const STOP = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="7" y="7" width="10" height="10" rx="2"/></svg>';
+const QUICK = [
+  ['מה היום?', 'מה האימון שלי היום, ועל מה לשים לב?'],
+  ['האימון האחרון', 'מה דעתך על האימון האחרון שרשמתי?'],
+  ['סיכום השבוע', 'איך נראה השבוע עד עכשיו, ומה הדגש להמשך?'],
+  ['תמונה כללית', 'איפה אני ביחס לתוכנית ולמטרות?']
+];
+
+// Small, safe Markdown: paragraphs, bullet and numbered lists, **bold**.
+function md(t){
+  const inl = x => x.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+  let out = '', list = null;
+  const close = () => { if (list) { out += `</${list}>`; list = null; } };
+  esc(t).split('\n').forEach(raw => {
+    const l = raw.trim(); let m;
+    if (!l) { close(); return; }
+    if ((m = /^[-•*]\s+(.*)$/.exec(l))) { if (list !== 'ul') { close(); out += '<ul>'; list = 'ul'; } out += `<li>${inl(m[1])}</li>`; }
+    else if ((m = /^\d+[.)]\s+(.*)$/.exec(l))) { if (list !== 'ol') { close(); out += '<ol>'; list = 'ol'; } out += `<li>${inl(m[1])}</li>`; }
+    else if ((m = /^#{1,4}\s+(.*)$/.exec(l))) { close(); out += `<p><b>${inl(m[1])}</b></p>`; }
+    else { close(); out += `<p>${inl(l)}</p>`; }
+  });
+  close(); return out;
+}
+const THINK = '<span class="think" aria-label="המאמן חושב"><i></i><i></i><i></i></span>';
+const imgWord = n => n === 1 ? 'צילום מסך אחד' : `${n} צילומי מסך`;
+function bubble(x){
+  if (x.r === 'u') return `<div class="msg u">${x.n ? `<span class="imgtag">${CAM}${imgWord(x.n)}</span>` : ''}${esc(x.t)}</div>`;
+  return `<div class="msg a"${x.pending ? ' id="rep"' : ''}>${x.t ? md(x.t) : THINK}${x.cut ? '<div class="cut">התשובה נקטעה. אפשר לבקש את ההמשך.</div>' : ''}</div>`;
+}
+function composer(){
+  return `<div class="composer">
+    ${thumbsHtml(chatImgs, 'data-act="kimgx" data-i', 'data-act="kimg"', '')}
+    <div class="crow">
+      <button class="cbtn" data-act="kimg" aria-label="צירוף צילומי מסך מהשעון">${CAM}</button>
+      <textarea class="cin" id="cin" rows="1" placeholder="לשאול את המאמן" aria-label="הודעה למאמן">${esc(draft)}</textarea>
+      ${busy ? `<button class="cbtn go" data-act="cstop" aria-label="עצירת התשובה">${STOP}</button>` : `<button class="cbtn go" data-act="csend" aria-label="שליחה">${SEND}</button>`}
+    </div>
+    <input type="file" id="kimgin" accept="image/*" multiple hidden>
+  </div>`;
+}
+function keyForm(){
+  return `<label class="fl">מפתח API<input class="in keyin" id="keyin" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="sk-ant-..." dir="ltr"></label>
+    <label class="fl">מודל<select class="in" id="modelin">${MODELS.map(m => `<option value="${m[0]}"${m[0] === model ? ' selected' : ''}>${m[1]}</option>`).join('')}</select></label>
+    ${keyErr ? `<p class="kerr" role="alert">${esc(keyErr)}</p>` : ''}
+    <button class="btn pri" data-act="keysave" ${keyBusy ? 'disabled' : ''}>${keyBusy ? 'בודק את המפתח…' : 'בדיקה ושמירה'}</button>
+    <p class="note">המפתח נשמר רק בטלפון הזה ונשלח רק ל־Anthropic. הוא לא נכנס לגיבוי ולא עולה ל־GitHub. לא לשתף אותו עם אף אחד.</p>`;
+}
+function setupPanel(){
+  return `<section class="panel"><h2>המאמן בתוך האפליקציה</h2>
+    <p class="note">אפשר לשאול את המאמן ישר מכאן ולצרף כמה צילומי מסך מהשעון. לשם כך צריך מפתח API אישי של Anthropic. זה חשבון נפרד מהמנוי ל־Claude, ומשלמים בו לפי שימוש.</p>
     <ol class="steps">
-      <li>בוחרים מה לשלוח: אימון אחרון, השבוע או הכל מההתחלה.</li>
-      <li>${canShare ? 'לוחצים ״שיתוף״ ובוחרים את האפליקציה שבה המאמן נמצא.' : 'לוחצים ״העתקה״.'} אפשר גם להעתיק ולהדביק בשיחה.</li>
-      <li>המאמן מזהה את העדכון ועונה לפי התוכנית והקצבים.</li>
+      <li>נכנסים ל־<a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a> ונרשמים.</li>
+      <li>בעמוד החיוב (Billing) מטעינים קרדיט, למשל 5 דולר. כדאי להגדיר גם תקרת הוצאה חודשית בעמוד ההגבלות (Limits).</li>
+      <li>בעמוד API Keys לוחצים Create Key, מעתיקים את המפתח ומדביקים כאן.</li>
     </ol>
+    ${keyForm()}
   </section>`;
 }
+function settingsPanel(){
+  const cur = MODELS.find(m => m[0] === model);
+  return `<details class="more"${keyEdit ? ' open' : ''}><summary>הגדרות המאמן ${CHEV_L}</summary><div class="mbody">
+    <p class="note">מחובר עם מפתח שמסתיים ב־<span class="num">${esc(apiKey.slice(-4))}</span> · ${esc(cur ? cur[1] : model)}</p>
+    ${keyForm()}
+    <button class="reset" data-act="keydel">ניתוק המפתח מהטלפון</button>
+  </div></details>`;
+}
+function vCoach(){
+  if (!apiKey) {
+    return `<section class="coachhead"><h1>המאמן</h1><p class="meta">כאן מכינים עדכון מסודר על האימונים ושולחים אותו לשיחה עם המאמן, או מחברים את המאמן לאפליקציה.</p></section>
+    <section class="panel">${manualInner()}</section>
+    ${setupPanel()}`;
+  }
+  const m = CHAT.data.m;
+  let h = `<section class="chathead"><div><h1>המאמן</h1><p class="meta">מכיר את התוכנית, הקצבים ומה שרשמת. אפשר לצרף כמה צילומים מהשעון.</p></div>${m.length && !busy ? '<button class="newbtn" data-act="cnew">שיחה חדשה</button>' : ''}</section>`;
+  if (!m.length) h += `<section class="panel"><p class="note">אפשר לשאול על האימון של היום, לבקש סיכום שבוע, לספר איך הרגיש או לצרף צילומי מסך מהשעון (למשל סקירה, הקפות וסטטיסטיקה של אותו אימון). המאמן רואה את כל מה שסימנת ורשמת באפליקציה.</p></section>`;
+  h += `<div class="chat" id="chat">${m.map(bubble).join('')}${cErr ? `<div class="cerr" role="status">${esc(cErr)}${cErrRetry ? '<button data-act="cretry">לנסות שוב</button>' : ''}</div>` : ''}</div>`;
+  if (!busy) h += `<div class="chips">${QUICK.map(q => `<button class="chip" data-act="ask" data-q="${esc(q[1])}">${q[0]}</button>`).join('')}</div>`;
+  h += composer();
+  h += `<details class="more"><summary>שליחה ידנית לאפליקציה אחרת ${CHEV_L}</summary><div class="mbody">${manualInner()}</div></details>`;
+  h += settingsPanel();
+  return h;
+}
+
+/* ---------- talking to the API ---------- */
+// Screenshots are shrunk on the phone before sending: 1568 px on the long side is what Claude reads anyway.
+async function imgBlock(file){
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('img')); i.src = url; });
+    const sc = Math.min(1, 1568 / Math.max(img.naturalWidth, img.naturalHeight));
+    const w = Math.max(1, Math.round(img.naturalWidth * sc)), h = Math.max(1, Math.round(img.naturalHeight * sc));
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, w, h); g.drawImage(img, 0, 0, w, h);
+    return {type: 'image', source: {type: 'base64', media_type: 'image/jpeg', data: c.toDataURL('image/jpeg', 0.85).split(',')[1]}};
+  } finally { URL.revokeObjectURL(url); }
+}
+function apiTurns(blocks){
+  const hist = CHAT.data.m.filter(x => x.t && !x.pending).slice(-16);
+  const out = [];
+  hist.forEach((x, i) => {
+    const role = x.r === 'u' ? 'user' : 'assistant';
+    let text = x.t;
+    const last = i === hist.length - 1;
+    if (role === 'user' && x.n && !(last && blocks && blocks.length)) text = `[צירפתי קודם ${imgWord(x.n)}]\n` + text;
+    const content = role === 'user' && last && blocks && blocks.length ? [...blocks, {type: 'text', text}] : [{type: 'text', text}];
+    const prev = out[out.length - 1];
+    if (prev && prev.role === role) prev.content.push(...content); else out.push({role, content});
+  });
+  while (out.length && out[0].role !== 'user') out.shift();
+  return out;
+}
+function apiError(status, type, msg){
+  const m = String(msg || '').toLowerCase();
+  if (status === 401 || type === 'authentication_error') return {t: 'המפתח לא מתקבל. כדאי לבדוק שהעתקת אותו במלואו, או ליצור מפתח חדש.', retry: false, key: true};
+  if (status === 403 || type === 'permission_error') return {t: 'למפתח הזה אין הרשאה. כדאי ליצור מפתח חדש ב־Console.', retry: false, key: true};
+  if (m.includes('credit') || m.includes('billing')) return {t: 'אין מספיק קרדיט בחשבון ה־API. אפשר להטעין בעמוד החיוב ב־Console ולנסות שוב.', retry: true};
+  if (status === 404 || type === 'not_found_error') return {t: 'המודל שנבחר לא זמין בחשבון. אפשר לבחור מודל אחר בהגדרות המאמן.', retry: false};
+  if (status === 413 || type === 'request_too_large') return {t: 'הבקשה גדולה מדי. כדאי לשלוח פחות צילומים או להתחיל שיחה חדשה.', retry: false};
+  if (status === 429 || type === 'rate_limit_error') return {t: 'יותר מדי בקשות כרגע, או שהגעת לתקרת ההוצאה. אפשר לנסות שוב בעוד דקה.', retry: true};
+  if (status === 529 || type === 'overloaded_error') return {t: 'השירות עמוס כרגע. אפשר לנסות שוב בעוד רגע.', retry: true};
+  if (status === 400 || type === 'invalid_request_error') return {t: 'הבקשה לא התקבלה. אם צירפת צילומים, כדאי לנסות צילומי מסך רגילים (JPG או PNG).', retry: false};
+  return {t: 'התשובה נעצרה בגלל תקלה. אפשר לנסות שוב.', retry: true};
+}
+class ApiFail extends Error { constructor(info, text){ super(info.t); this.info = info; this.partial = text || ''; } }
+async function callApi({system, messages, maxTokens, onText, signal}){
+  let r;
+  try {
+    r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST', signal,
+      headers: {'content-type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true'},
+      body: JSON.stringify({model, max_tokens: maxTokens, stream: !!onText, system, messages})
+    });
+  } catch(e) {
+    if (e && e.name === 'AbortError') throw e;
+    throw new ApiFail({t: navigator.onLine === false ? 'אין חיבור לאינטרנט. המאמן צריך רשת כדי לענות.' : 'לא הצלחתי להתחבר ל־Anthropic. אפשר לנסות שוב.', retry: true});
+  }
+  if (!r.ok) {
+    let j = null; try { j = await r.json(); } catch(e) {}
+    const er = j && j.error || {};
+    throw new ApiFail(apiError(r.status, er.type, er.message));
+  }
+  if (!onText) { const j = await r.json(); return {text: (j.content || []).filter(b => b.type === 'text').map(b => b.text).join(''), cut: j.stop_reason === 'max_tokens'}; }
+  const reader = r.body.getReader(), dec = new TextDecoder();
+  let buf = '', text = '', stop = '';
+  for (;;) {
+    const {done, value} = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, {stream: true});
+    let i;
+    while ((i = buf.indexOf('\n\n')) >= 0) {
+      const ev = buf.slice(0, i); buf = buf.slice(i + 2);
+      const line = ev.split('\n').find(l => l.startsWith('data:')); if (!line) continue;
+      let d; try { d = JSON.parse(line.slice(5).trim()); } catch(e) { continue; }
+      if (d.type === 'content_block_delta' && d.delta && d.delta.type === 'text_delta') { text += d.delta.text; onText(text); }
+      else if (d.type === 'message_delta' && d.delta && d.delta.stop_reason) stop = d.delta.stop_reason;
+      else if (d.type === 'error') throw new ApiFail(apiError(0, d.error && d.error.type, d.error && d.error.message), text);
+    }
+  }
+  return {text, cut: stop === 'max_tokens'};
+}
+
+function scrollEnd(){ requestAnimationFrame(() => window.scrollTo(0, document.documentElement.scrollHeight)); }
+async function runCoach(blocks){
+  const reply = {r: 'a', t: '', pending: true, ts: Date.now()};
+  const messages = apiTurns(blocks);
+  CHAT.data.m.push(reply);
+  busy = true; cErr = ''; cErrRetry = false; ctl = new AbortController();
+  if (view === 'coach') { render(); scrollEnd(); }
+  try {
+    const res = await callApi({
+      system: [{type: 'text', text: COACH_RULES, cache_control: {type: 'ephemeral'}}, {type: 'text', text: contextText(), cache_control: {type: 'ephemeral'}}],
+      messages, maxTokens: 1500, signal: ctl.signal,
+      onText: text => {
+        reply.t = text;
+        const el = document.getElementById('rep'); if (!el) return;
+        const near = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 160;
+        el.innerHTML = md(text);
+        if (near) window.scrollTo(0, document.documentElement.scrollHeight);
+      }
+    });
+    reply.t = res.text; if (res.cut) reply.cut = true;
+    retryBlocks = null;
+  } catch(e) {
+    if (e instanceof ApiFail) {
+      if (e.partial) reply.t = e.partial;
+      cErr = e.info.t; cErrRetry = e.info.retry;
+      if (e.info.key) { keyEdit = true; }
+    } else if (!(e && e.name === 'AbortError')) { cErr = 'התשובה נעצרה בגלל תקלה. אפשר לנסות שוב.'; cErrRetry = true; }
+  }
+  delete reply.pending;
+  if (!reply.t) CHAT.data.m.splice(CHAT.data.m.indexOf(reply), 1); else if (!cErr) retryBlocks = null;
+  if (CHAT.data.m.length > 40) CHAT.data.m = CHAT.data.m.slice(-40);
+  busy = false; ctl = null; CHAT.save();
+  if (view === 'coach') { render(); scrollEnd(); }
+}
+async function ask(text, files){
+  if (busy || !apiKey) return;
+  text = String(text || '').trim();
+  files = files || chatImgs.map(x => x.file);
+  if (!text && !files.length) return;
+  if (!text) text = files.length > 1 ? 'צילומי מסך מהגרמין. מה דעתך?' : 'צילום מסך מהגרמין. מה דעתך?';
+  CHAT.data.m.push({r: 'u', t: text.slice(0, 2000), n: files.length || undefined, ts: Date.now()});
+  draft = ''; dropImgs(chatImgs); CHAT.save();
+  let blocks = [];
+  if (files.length) {
+    busy = true; if (view === 'coach') { render(); scrollEnd(); }
+    try { blocks = await Promise.all(files.map(imgBlock)); }
+    catch(e) { blocks = []; toast('לא הצלחתי לקרוא את אחד הצילומים. הוא לא נשלח.'); }
+    busy = false;
+  }
+  retryBlocks = blocks;
+  runCoach(blocks);
+}
+async function saveKey(){
+  const inp = document.getElementById('keyin'), sel = document.getElementById('modelin');
+  const k = (inp && inp.value || '').trim(), mdl = sel ? sel.value : model;
+  if (!k && apiKey && mdl !== model) { model = mdl; lsSet('tlv27model', model); keyErr = ''; keyEdit = false; toast('המודל עודכן'); render(); return; }
+  if (!/^sk-ant-[\w-]{20,}$/.test(k)) { keyErr = 'זה לא נראה כמו מפתח API של Anthropic. מפתח מתחיל ב־sk-ant-.'; render(); return; }
+  const prevKey = apiKey, prevModel = model;
+  apiKey = k; model = mdl; keyBusy = true; keyErr = ''; render();
+  try {
+    await callApi({system: 'Reply with OK.', messages: [{role: 'user', content: 'ping'}], maxTokens: 5});
+    lsSet('tlv27key', apiKey); lsSet('tlv27model', model);
+    keyEdit = false; toast('המאמן מחובר');
+  } catch(e) {
+    keyErr = e instanceof ApiFail ? e.info.t : 'הבדיקה נכשלה. אפשר לנסות שוב.';
+    apiKey = prevKey; model = prevModel;
+  }
+  keyBusy = false; render();
+}
+function fitCin(el){ el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 140) + 'px'; }
+
+/* ---------- screenshots (several per message) ---------- */
+const MAXIMG = 6;
+function addImgs(list, files){
+  let skipped = 0;
+  for (const f of files) {
+    if (f.type && !f.type.startsWith('image/')) { skipped++; continue; }
+    if (list.length >= MAXIMG) { toast(`אפשר לצרף עד ${MAXIMG} צילומים בהודעה אחת.`); break; }
+    list.push({file: f, url: URL.createObjectURL(f)});
+  }
+  if (skipped) toast('אפשר לצרף רק תמונות.');
+}
+function dropImgs(list, i){
+  const gone = i == null ? list.splice(0) : list.splice(i, 1);
+  gone.forEach(x => { try { URL.revokeObjectURL(x.url); } catch(e) {} });
+}
+// act: the data attribute that removes (e.g. 'data-act="cimgx"'); add: the attribute that opens the picker.
+function thumbsHtml(list, rmAttr, addAttr, label){
+  if (!list.length) return '';
+  return `<div class="thumbs">${list.map((x, i) => `<div class="thumb"><img src="${x.url}" alt="צילום ${i+1}"><button ${rmAttr}="${i}" aria-label="הסרת צילום ${i+1}">${XS}</button></div>`).join('')}${list.length < MAXIMG ? `<button class="addthumb" ${addAttr} aria-label="צירוף צילום נוסף">${PLUS}</button>` : ''}<span class="cnt">${label || ''}</span></div>`;
+}
+const filesOf = list => list.map((x, i) => new File([x.file], x.file.name || `garmin-${i+1}.jpg`, {type: x.file.type || 'image/jpeg'}));
+function shareWithImgs(text, list, done){
+  if (list.length && canShareFiles) {
+    navigator.share({text, files: filesOf(list)}).then(() => { if (done) done(); })
+      .catch(e => { if (!e || e.name !== 'AbortError') shareText(text); });
+  } else shareText(text);
+}
+
 let toastT = null;
 function toast(m){
   let el = document.getElementById('toast');
@@ -839,11 +1200,8 @@ const PACE_HTML = `
 </details>`;
 
 /* ---------- result sheet ---------- */
-let sheetId = null, sheetRpe = 0, sheetImg = null, sheetImgUrl = '';
-const CAM = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-2.5h6L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.3"/></svg>';
-const XS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
-// A Garmin screenshot travels to Claude through the phone's share sheet, together with the result text.
-const canShareFiles = !!navigator.canShare && (() => { try { return navigator.canShare({files: [new File(['x'], 'g.png', {type: 'image/png'})]}); } catch(e) { return false; } })();
+let sheetId = null, sheetRpe = 0;
+const sheetImgs = [];
 const onlyDigits = v => String(v || '').replace(/\D/g, '');
 function timeBoxes(ph){
   return `<div class="fl wide"><span>זמן</span>
@@ -881,11 +1239,11 @@ function distVal(t){
   return (k || '0') + (d ? '.' + d : '');
 }
 function gBlock(){
-  if (sheetImg) return `<div class="gatt"><img src="${sheetImgUrl}" alt="צילום המסך מהגרמין"><span>הצילום יישלח למאמן יחד עם התוצאה, ב״שמירה ושליחה למאמן״.</span><button data-sh="gx" aria-label="הסרת הצילום">${XS}</button></div>`;
-  if (!canShareFiles) return '';
-  return `<button class="gbtn" data-sh="gimg">${CAM}צירוף צילום מסך מהגרמין</button>`;
+  if (sheetImgs.length) return thumbsHtml(sheetImgs, 'data-sh="gx" data-i', 'data-sh="gimg"', 'יישלחו למאמן ב״שמירה ושליחה״');
+  if (!apiKey && !canShareFiles) return '';
+  return `<button class="gbtn" data-sh="gimg">${CAM}צירוף צילומי מסך מהגרמין</button>`;
 }
-function clearSheetImg(){ if (sheetImgUrl) try { URL.revokeObjectURL(sheetImgUrl); } catch(e) {} sheetImg = null; sheetImgUrl = ''; }
+function clearSheetImg(){ dropImgs(sheetImgs); }
 function openLog(id){
   const it = itemById(id); if (!it) return;
   sheetId = id; clearSheetImg();
@@ -908,7 +1266,7 @@ function openLog(id){
     <div><div class="fl">מאמץ (1–10)</div><div class="rpe" id="f-rpe">${Array.from({length:10}, (_, i) => `<button data-rpe="${i+1}" aria-pressed="${sheetRpe === i+1}">${i+1}</button>`).join('')}</div><div class="rpe-hint"><span>קל מאוד</span><span>מקסימלי</span></div></div>
     <label class="fl">הערות<textarea class="in" id="f-note" rows="3" placeholder="איך הרגיש, ספליטים, כאבים, חום, רוח"></textarea></label>
     <div id="g-box">${gBlock()}</div>
-    <input type="file" id="g-in" accept="image/*" hidden>
+    <input type="file" id="g-in" accept="image/*" multiple hidden>
     <div class="sh-act"><button class="btn pri" data-sh="send">שמירה ושליחה למאמן</button><button class="btn sec" data-sh="save">שמירה</button>${LOGS.data[id] ? '<button class="btn del" data-sh="del">מחיקת התוצאה</button>' : ''}</div>
   </div>`;
   document.body.appendChild(el);
@@ -930,10 +1288,9 @@ function openLog(id){
   });
   el.addEventListener('change', e => {
     if (e.target.id !== 'g-in') return;
-    const f = e.target.files && e.target.files[0]; e.target.value = '';
-    if (!f) return;
-    if (f.type && !f.type.startsWith('image/')) { toast('אפשר לצרף רק תמונה.'); return; }
-    clearSheetImg(); sheetImg = f; sheetImgUrl = URL.createObjectURL(f);
+    const fs = Array.from(e.target.files || []); e.target.value = '';
+    if (!fs.length) return;
+    addImgs(sheetImgs, fs);
     document.getElementById('g-box').innerHTML = gBlock();
   });
   el.addEventListener('click', e => {
@@ -944,7 +1301,7 @@ function openLog(id){
     const act = a.dataset.sh;
     if (act === 'close') closeLog();
     else if (act === 'gimg') document.getElementById('g-in').click();
-    else if (act === 'gx') { clearSheetImg(); document.getElementById('g-box').innerHTML = gBlock(); }
+    else if (act === 'gx') { dropImgs(sheetImgs, +a.dataset.i); document.getElementById('g-box').innerHTML = gBlock(); }
     else if (act === 'del') { delete LOGS.data[sheetId]; LOGS.save(); closeLog(); render(); }
     else saveLog(act === 'send');
   });
@@ -961,22 +1318,27 @@ function saveLog(send){
   if (sheetRpe) lg.rpe = sheetRpe;
   const note = g('f-note'); if (note) lg.note = note.slice(0, 1000);
   const has = Object.keys(lg).length;
-  const img = sheetImg; sheetImg = null;   // keep the photo before closeLog clears the preview
+  const imgs = sheetImgs.splice(0);   // keep the photos before closeLog clears the preview
   if (has) { lg.ts = Date.now(); LOGS.data[id] = lg; } else delete LOGS.data[id];
   LOGS.save();
+  const img = imgs.length;
   if ((has || (send && img)) && !DONE.data[id]) { DONE.data[id] = true; DONE.save(); justId = id; }
   closeLog();
-  if (send && (has || img)) {
+  const d = dayDate(it.wi, it.di);
+  if (send && (has || img) && apiKey) {
+    go('coach');
+    const what = `${LONG[it.k]} של יום ${DN[it.di]} ${fmt(d)} (שבוע ${it.wi+1})`;
+    const q = has ? `רשמתי תוצאה: ${what}.\nמתוכנן: ${it.t}\nבפועל: ${logText(it, LOGS.data[id])}${img ? `\nמצורפים ${imgWord(img)} מהגרמין.` : ''}\nמה דעתך?`
+      : `${imgWord(img)} מהגרמין: ${what}.\nמתוכנן: ${it.t}\nמה דעתך?`;
+    ask(q, imgs.map(x => x.file));
+    imgs.forEach(x => { try { URL.revokeObjectURL(x.url); } catch(e) {} });
+  } else if (send && (has || img)) {
     cmode = 'last'; go('coach');
-    const d = dayDate(it.wi, it.di);
-    let msg = has ? resultMsg(id) : `${HEAD}\n${todayLine()}\n\nצילום מסך מהגרמין של ${LONG[it.k]} ביום ${DN[it.di]} ${fmt(d)} (שבוע ${it.wi+1}). מתוכנן: ${it.t}\n\n${weekBlock(curWeek(), 'השבוע')}\nמה דעתך?`;
-    if (img && has) msg = msg.replace(/\nמה דעתך\?$/, '\nמצורף צילום מסך מהגרמין.\nמה דעתך?');
+    let msg = has ? resultMsg(id) : `${HEAD}\n${todayLine()}\n\n${imgWord(img)} מהגרמין של ${LONG[it.k]} ביום ${DN[it.di]} ${fmt(d)} (שבוע ${it.wi+1}). מתוכנן: ${it.t}\n\n${weekBlock(curWeek(), 'השבוע')}\nמה דעתך?`;
+    if (img && has) msg = msg.replace(/\nמה דעתך\?$/, `\nמצורפים ${imgWord(img)} מהגרמין.\nמה דעתך?`);
     // Still inside the tap, so the share sheet is allowed to open.
-    if (img && canShareFiles) {
-      const f = new File([img], img.name || 'garmin.jpg', {type: img.type || 'image/jpeg'});
-      navigator.share({text: msg, files: [f]}).catch(e => { if (!e || e.name !== 'AbortError') shareText(msg); });
-    } else shareText(msg);
-  } else render();
+    shareWithImgs(msg, imgs);
+  } else { imgs.forEach(x => { try { URL.revokeObjectURL(x.url); } catch(e) {} }); render(); }
 }
 
 /* ---------- shell ---------- */
@@ -986,10 +1348,12 @@ function render(){
   document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-current', t.dataset.view === view ? 'page' : 'false'));
   document.getElementById('ovr').textContent = pct(overall().c, TOTAL) + '%';
   justId = null;
+  const c = document.getElementById('cin'); if (c && draft) fitCin(c);
 }
 function go(v){
   view = v; try { localStorage.setItem('tlv27view', v); } catch(e) {}
-  render(); window.scrollTo(0, 0);
+  render();
+  if (v === 'coach' && apiKey && CHAT.data.m.length) scrollEnd(); else window.scrollTo(0, 0);
 }
 function step(n){
   let i = selW*7 + selD + n;
@@ -1001,11 +1365,15 @@ document.querySelector('.tabs').addEventListener('click', e => {
   if (b.dataset.view === 'week' && view !== 'week') viewW = selW;
   go(b.dataset.view);
 });
-function clearCoachImg(){ if (coachImgUrl) try { URL.revokeObjectURL(coachImgUrl); } catch(e) {} coachImg = null; coachImgUrl = ''; }
+main.addEventListener('input', e => { if (e.target.id === 'cin') { draft = e.target.value; fitCin(e.target); } });
+main.addEventListener('keydown', e => {
+  if (e.target.id === 'cin' && e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); ask(e.target.value); }
+  if (e.target.id === 'keyin' && e.key === 'Enter') { e.preventDefault(); saveKey(); }
+});
 main.addEventListener('change', e => {
-  if (e.target.id === 'cimgin') {
-    const f = e.target.files && e.target.files[0]; e.target.value = '';
-    if (f) { clearCoachImg(); coachImg = f; coachImgUrl = URL.createObjectURL(f); render(); }
+  if (e.target.id === 'cimgin' || e.target.id === 'kimgin') {
+    const fs = Array.from(e.target.files || []); e.target.value = '';
+    if (fs.length) { addImgs(e.target.id === 'cimgin' ? coachImgs : chatImgs, fs); render(); if (e.target.id === 'kimgin') scrollEnd(); }
     return;
   }
   if (e.target.id !== 'impin') return;
@@ -1031,16 +1399,28 @@ main.addEventListener('click', e => {
   else if (a === 'wnext') { viewW = Math.min(NW-1, viewW+1); render(); }
   else if (a === 'wk') { viewW = +t.dataset.w; go('week'); }
   else if (a === 'open') { selW = +t.dataset.w; selD = +t.dataset.d; go('today'); }
-  else if (a === 'mode') { cmode = t.dataset.m; render(); }
+  else if (a === 'mode') { cmode = t.dataset.m; render(); if (apiKey) { const dd = document.querySelectorAll('details.more')[0]; if (dd) dd.open = true; } }
   else if (a === 'share') {
     const b = document.getElementById('sumbox'); if (!b) return;
-    if (coachImg && canShareFiles) {
-      const f = new File([coachImg], coachImg.name || 'garmin.jpg', {type: coachImg.type || 'image/jpeg'});
-      navigator.share({text: b.value, files: [f]}).then(() => { clearCoachImg(); render(); }).catch(e => { if (!e || e.name !== 'AbortError') shareText(b.value); });
-    } else shareText(b.value);
+    shareWithImgs(b.value, coachImgs, () => { dropImgs(coachImgs); render(); });
   }
   else if (a === 'cimg') { const f = document.getElementById('cimgin'); if (f) f.click(); }
-  else if (a === 'cimgx') { clearCoachImg(); render(); }
+  else if (a === 'cimgx') { dropImgs(coachImgs, +t.dataset.i); render(); }
+  else if (a === 'kimg') { const f = document.getElementById('kimgin'); if (f) f.click(); }
+  else if (a === 'kimgx') { dropImgs(chatImgs, +t.dataset.i); render(); }
+  else if (a === 'ask') { ask(t.dataset.q, []); }
+  else if (a === 'csend') { const c = document.getElementById('cin'); ask(c ? c.value : draft); }
+  else if (a === 'cstop') { if (ctl) ctl.abort(); }
+  else if (a === 'cretry') { const m = CHAT.data.m; if (!busy && m.length && m[m.length-1].r === 'u') runCoach(retryBlocks || []); }
+  else if (a === 'keysave') { saveKey(); }
+  else if (a === 'keydel') {
+    if (t.classList.contains('arm')) { clearTimeout(armT); apiKey = ''; lsSet('tlv27key', ''); keyEdit = false; render(); toast('המפתח נמחק מהטלפון'); }
+    else { t.classList.add('arm'); t.textContent = 'ללחוץ שוב כדי לנתק'; armT = setTimeout(() => { t.classList.remove('arm'); t.textContent = 'ניתוק המפתח מהטלפון'; }, 3000); }
+  }
+  else if (a === 'cnew') {
+    if (t.classList.contains('arm')) { clearTimeout(newArm); CHAT.data.m = []; cErr = ''; retryBlocks = null; CHAT.save(); render(); window.scrollTo(0, 0); }
+    else { t.classList.add('arm'); t.textContent = 'ללחוץ שוב לניקוי'; newArm = setTimeout(() => { t.classList.remove('arm'); t.textContent = 'שיחה חדשה'; }, 3000); }
+  }
   else if (a === 'copy') { const b = document.getElementById('sumbox'); if (b) copyText(b.value); }
   else if (a === 'export') { exportBackup(); }
   else if (a === 'hintx') { try { localStorage.setItem('tlv27hint', '1'); } catch(e) {} render(); }

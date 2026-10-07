@@ -1,6 +1,6 @@
 // Offline support: the app shell is cached on install. The page itself is fetched
 // network-first so a new version shows up on the next open; fonts are cached as they load.
-const CACHE = 'tlv27-v1';
+const CACHE = 'tlv27-v2';
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icons/apple-touch-icon.png', 'icons/icon-192.png', 'icons/icon-512.png'];
 
 self.addEventListener('install', e => {
