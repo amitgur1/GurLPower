@@ -24,6 +24,7 @@
   --accent:#0E6E8C; --accent-soft:#DCEEF3; --on-accent:#FFFFFF; --race:#C8531F; --race-soft:#FBE7DD;
   --easy:#3F8F5E; --q:#B8322F; --long:#0E6E8C; --cf:#7A5AA8; --swim:#1C8FB0; --rest:#8A989E;
   --bar:rgba(242,245,246,.88); --scrim:rgba(10,22,28,.45); --tabh:62px;
+  --m-hi:#D4432F; --m-hi-on:#FFFFFF; --m-lo:#E9B52E; --m-lo-on:#2B2106; --m-off:#C7D2D6; --m-skin:#E4EAEC;
   --f-display:"Secular One","Rubik",Arial,sans-serif; --f-body:"Rubik",Arial,sans-serif;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
@@ -32,6 +33,7 @@
   --accent:#4DB3D3; --accent-soft:#16333D; --on-accent:#0F181C; --race:#F08A5A; --race-soft:#3A2419;
   --easy:#6CC08B; --q:#EE7471; --long:#4DB3D3; --cf:#A98DD6; --swim:#5CC3E0; --rest:#71838A;
   --bar:rgba(15,24,28,.88);
+  --m-hi:#EF6A5B; --m-hi-on:#1C0C0A; --m-lo:#E7BE4C; --m-lo-on:#231A04; --m-off:#34464E; --m-skin:#1F2D34;
 }}
 :root[data-theme="dark"]{
   color-scheme:dark;
@@ -39,6 +41,7 @@
   --accent:#4DB3D3; --accent-soft:#16333D; --on-accent:#0F181C; --race:#F08A5A; --race-soft:#3A2419;
   --easy:#6CC08B; --q:#EE7471; --long:#4DB3D3; --cf:#A98DD6; --swim:#5CC3E0; --rest:#71838A;
   --bar:rgba(15,24,28,.88);
+  --m-hi:#EF6A5B; --m-hi-on:#1C0C0A; --m-lo:#E7BE4C; --m-lo-on:#231A04; --m-off:#34464E; --m-skin:#1F2D34;
 }
 *{box-sizing:border-box}
 html,body{min-height:100%}
@@ -313,6 +316,41 @@ details.more .mbody{padding:0 16px 16px;display:grid;gap:12px}
 select.in{font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
 .steps a{color:var(--accent)}
 @media (max-width:380px){.wo{grid-template-columns:38px 1fr 30px;gap:10px;padding:14px 12px}.wo .ico{width:38px;height:38px}.wt{font-size:15px}.wday{grid-template-columns:46px 1fr;padding-inline:12px}}
+/* strength log: exercise rows in the result sheet, weekly muscle map */
+.exs{display:grid;gap:10px}
+.exs-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.exs-h b{font-weight:600;font-size:14px}
+.exs-h span{font-size:12px;color:var(--muted)}
+.exlist{display:grid;gap:10px}
+.exr{display:grid;gap:8px;border:1px solid var(--line);border-radius:12px;padding:10px}
+.exl{display:flex;gap:6px;align-items:center}
+.exl .in{flex:1;min-width:0}
+.exx{flex:none;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--muted)}
+.exx svg{width:14px;height:14px}
+.exl2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mtags,.mpick{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.mc{font-size:12px;line-height:1.4;border-radius:20px;padding:3px 9px;border:1px solid var(--line);color:var(--muted);background:var(--surface)}
+.mc.l2{background:var(--m-hi);border-color:var(--m-hi);color:var(--m-hi-on)}
+.mc.l1{background:var(--m-lo);border-color:var(--m-lo);color:var(--m-lo-on)}
+.mpick .mc{padding:6px 11px;font-size:13px}
+.mlink{font-size:12px;color:var(--accent);font-weight:500;padding:3px 4px}
+.mnone{font-size:12px;color:var(--muted)}
+.mhint{font-size:11px;color:var(--muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.exp{font-size:12px;color:var(--accent)}
+.exm:empty,.exp:empty{display:none}
+.exadd{justify-self:start;display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-weight:500;font-size:14px;border:1.5px dashed var(--accent);border-radius:10px;padding:8px 14px}
+.exadd svg{width:16px;height:16px}
+.mus-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.bodymap svg{width:100%;max-width:330px;height:auto;margin:0 auto}
+.legend i.hi{background:var(--m-hi)}.legend i.lo{background:var(--m-lo)}.legend i.off{background:var(--m-off)}
+.legend{justify-content:center}
+.miss{display:grid;gap:6px}
+.miss b{font-weight:500;font-size:14px}
+.mchips{display:flex;flex-wrap:wrap;gap:6px}
+.mchip{font-size:13px;padding:4px 11px;border-radius:20px;border:1px dashed var(--muted);color:var(--ink)}
+.mtodo{background:var(--accent-soft);border-radius:14px;padding:12px 14px;display:grid;gap:6px;font-size:14px}
+.mtodo b{font-weight:600;color:var(--accent)}
+.mtodo .mchip{border-color:var(--accent);background:var(--surface)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -581,8 +619,179 @@ function logParts(it, lg){
   if (lg.rpe) out.push(`מאמץ ${lg.rpe}/10`);
   return out;
 }
-const logSummary = (it, lg) => logParts(it, lg).join(' · ') || (lg.note ? 'הערה נשמרה' : '');
-const logText = (it, lg) => logParts(it, lg).join(', ') + (lg.note ? `. הערות: ${lg.note}` : '');
+const exOf = lg => (lg && Array.isArray(lg.ex)) ? lg.ex.filter(e => e && e.n) : [];
+const exLine = lg => exOf(lg).map(e => e.n + (e.w ? ` ${e.w} ק״ג` : '') + (e.r ? ` (${e.r})` : '')).join(', ');
+const logSummary = (it, lg) => { const n = exOf(lg).length; return [...logParts(it, lg), ...(n ? [n === 1 ? 'תרגיל אחד' : `${n} תרגילים`] : [])].join(' · ') || (lg.note ? 'הערה נשמרה' : ''); };
+const logText = (it, lg) => { const x = exLine(lg); return logParts(it, lg).join(', ') + (x ? `${logParts(it, lg).length ? '. ' : ''}תרגילים: ${x}` : '') + (lg.note ? `. הערות: ${lg.note}` : ''); };
+
+/* ---------- strength: exercises, weights, and which muscles they hit ---------- */
+const MU = {chest:'חזה', sh:'כתפיים', upb:'גב עליון', lats:'גב רחב', bi:'יד קדמית', tri:'יד אחורית', core:'בטן וליבה', lowb:'גב תחתון', glu:'ישבן', quad:'ארבע ראשי', ham:'המסטרינג', add:'מקרבים', calf:'תאומים'};
+const MUK = Object.keys(MU);
+const LEGS = ['glu','quad','ham','add','calf'];
+// [name, aliases, primary, secondary]. Primary shows red on the map, secondary yellow (like the Garmin view).
+const EXDB = [
+ ['Back Squat','squat,bs,סקוואט,סקוואט אחורי','quad glu','ham add core lowb'],
+ ['Front Squat','fs,סקוואט קדמי,פרונט סקוואט','quad glu','core upb add'],
+ ['Overhead Squat','ohs','quad glu sh','core upb'],
+ ['Air Squat','סקוואט משקל גוף','quad glu',''],
+ ['Goblet Squat','','quad glu','core add'],
+ ['Thruster','תראסטר','quad glu sh','tri core'],
+ ['Wall Ball','wb,wall ball shot,וול בול','quad glu sh','core tri'],
+ ['Deadlift','dl,דדליפט','ham glu lowb','quad upb lats core'],
+ ['Romanian Deadlift','rdl,דדליפט רומני','ham glu','lowb'],
+ ['Sumo Deadlift High Pull','sdhp','glu ham upb sh','quad'],
+ ['Power Clean','pc,פאוור קלין','glu ham quad upb','sh lowb core calf'],
+ ['Squat Clean','clean,קלין','quad glu ham upb','sh lowb core'],
+ ['Hang Power Clean','hpc','glu ham upb','quad sh core'],
+ ['Clean and Jerk','c&j,cj,קלין אנד ג׳רק','glu quad ham sh','upb tri core'],
+ ['Power Snatch','סנאץ׳,סנאץ','glu ham sh upb','quad core lowb'],
+ ['Squat Snatch','snatch','quad glu sh upb','ham core lowb'],
+ ['Hang Power Snatch','hps','glu ham sh upb','core'],
+ ['Shoulder to Overhead','s2oh,stoh,sto','sh tri','core quad upb'],
+ ['Push Press','pp,פוש פרס','sh tri','quad core'],
+ ['Push Jerk','jerk,split jerk,ג׳רק','sh tri quad','core'],
+ ['Strict Press','press,shoulder press,overhead press,לחיצת כתפיים','sh tri','core upb'],
+ ['Bench Press','bench,לחיצת חזה','chest tri','sh'],
+ ['Dumbbell Bench Press','db bench,db press,לחיצת חזה דמבלים','chest tri','sh'],
+ ['Push-up','pushup,hand release push-up,שכיבות סמיכה,שכיבת סמיכה','chest tri','sh core'],
+ ['Handstand Push-up','hspu','sh tri','upb core'],
+ ['Dip','ring dip,bar dip,מקבילים','chest tri','sh'],
+ ['Pull-up','pullup,kipping pull-up,strict pull-up,מתח','lats bi','upb core'],
+ ['Chest to Bar','c2b,ctb,chest to bar pull-up','lats bi upb','core'],
+ ['Bar Muscle-up','bmu,bar mu,מאסל אפ,מאסל אפ מוט','lats chest tri','bi core sh'],
+ ['Ring Muscle-up','rmu,ring mu,מאסל אפ טבעות','lats chest tri','bi core sh'],
+ ['Rope Climb','חבל,טיפוס חבל','lats bi','core'],
+ ['Ring Row','','upb lats bi',''],
+ ['Bent-over Row','barbell row,pendlay row,חתירה במוט','lats upb','bi lowb'],
+ ['Dumbbell Row','db row,חתירה','lats upb','bi'],
+ ['Face Pull','','upb sh',''],
+ ['Lateral Raise','הרחקת כתפיים','sh',''],
+ ['Biceps Curl','curl,כפיפת מרפקים','bi',''],
+ ['Triceps Extension','פשיטת מרפקים','tri',''],
+ ['Toes to Bar','t2b,ttb','core','lats'],
+ ['Knees to Elbows','k2e','core','lats'],
+ ['Sit-up','situp,abmat sit-up,ghd sit-up,כפיפות בטן','core',''],
+ ['Plank','פלאנק','core','sh'],
+ ['Side Plank','פלאנק צידי','core',''],
+ ['Hollow Hold','hollow rock','core',''],
+ ['L-sit','lsit','core','tri'],
+ ['Pallof Press','פאלוף','core',''],
+ ['Back Extension','ghd hip extension,hip extension,היפר אקסטנשן','lowb glu ham',''],
+ ['Good Morning','גוד מורנינג','ham lowb glu',''],
+ ['Hip Thrust','glute bridge,גשר ישבן','glu','ham'],
+ ['Kettlebell Swing','kbs,kb swing,american swing,russian swing,סווינג','glu ham','lowb sh core'],
+ ['Lunge','walking lunge,מכרע,לאנג׳','quad glu','ham add'],
+ ['Front Rack Lunge','','quad glu','ham core upb'],
+ ['Overhead Lunge','','quad glu sh','core'],
+ ['Bulgarian Split Squat','bss,סקוואט בולגרי','quad glu','add ham'],
+ ['Step-up','box step-up,עליות על ארגז','quad glu',''],
+ ['Box Jump','box jump over,bjo,קפיצות על ארגז','quad glu calf',''],
+ ['Burpee','burpee box jump over,burpee over bar,ברפי,ברפיז','chest quad','sh core tri glu'],
+ ['Devil Press','','chest sh glu ham','core tri'],
+ ['Dumbbell Snatch','db snatch','glu ham sh','core upb'],
+ ['Farmer Carry','farmers carry,farmer walk,הליכת חקלאי','upb core','glu calf'],
+ ['Double Under','du,double unders,דאבל אנדר,קפיצה בחבל','calf','sh'],
+ ['Row','rowing,row erg,c2 row,חתירה במכונה','quad glu lats upb','ham bi core'],
+ ['Ski Erg','ski,סקי','lats tri core','sh'],
+ ['Bike','assault bike,echo bike,bike erg,אופניים','quad glu','ham calf'],
+ ['Run','running,ריצה','quad ham calf glu',''],
+ ['Calf Raise','','calf',''],
+ ['Nordic Curl','hamstring curl,nordic','ham',''],
+ ['Cossack Squat','','add quad glu',''],
+ ['Copenhagen Plank','קופנהגן','add core',''],
+ ['Wall Walk','','sh tri core','']
+].map(([n, al, p, s]) => ({n, al: al ? al.split(',') : [], p: p.split(' ').filter(Boolean), s: s.split(' ').filter(Boolean)}));
+// "Power Cleans", "power-clean" and "POWER CLEAN" all become "powerclean".
+const exNorm = s => String(s || '').toLowerCase().replace(/[׳'"`’]/g, '').replace(/[^a-z0-9&֐-׿]+/g, ' ').trim()
+  .split(' ').filter(Boolean).map(w => /^[a-z0-9]{2,}s$/.test(w) && !/ss$/.test(w) ? w.slice(0, -1) : w).join('');
+const EXIDX = new Map();
+EXDB.forEach(e => [e.n, ...e.al].forEach(a => { const k = exNorm(a); if (k && !EXIDX.has(k)) EXIDX.set(k, e); }));
+const EXKEYS = [...EXIDX.keys()].sort((a, b) => b.length - a.length);
+const EXMAP = makeDoc('tlv27exmap', () => ({}));   // muscles the user picked for exercises the list doesn't know
+function exMatch(name){
+  const k = exNorm(name); if (!k) return null;
+  if (EXIDX.has(k)) return EXIDX.get(k);
+  const hit = EXKEYS.find(x => x.length >= 4 && k.includes(x));
+  return hit ? EXIDX.get(hit) : null;
+}
+const exKey = name => { const m = exMatch(name); return m ? exNorm(m.n) : exNorm(name); };
+function musclesFor(name){
+  const own = EXMAP.data[exNorm(name)];
+  if (own && Array.isArray(own.p)) return {p: own.p.filter(k => MU[k]), s: (own.s || []).filter(k => MU[k])};
+  const m = exMatch(name);
+  return m ? {p: [...m.p], s: [...m.s]} : null;
+}
+function weekMuscles(wi){
+  const lvl = {}, cnt = {}; let withEx = 0, noEx = 0;
+  W[wi].d.forEach((_, di) => items(wi, di).forEach(it => {
+    if (it.k !== 'cf') return;
+    const ex = exOf(LOGS.data[it.id]);
+    if (!ex.length) { if (DONE.data[it.id]) noEx++; return; }
+    withEx++;
+    ex.forEach(e => {
+      (e.p || []).forEach(k => { if (!MU[k]) return; lvl[k] = 2; cnt[k] = (cnt[k] || 0) + 1; });
+      (e.s || []).forEach(k => { if (!MU[k]) return; if (!lvl[k]) lvl[k] = 1; cnt[k] = (cnt[k] || 0) + 1; });
+    });
+  }));
+  return {lvl, cnt, withEx, noEx, off: MUK.filter(k => !lvl[k])};
+}
+// Simplified front and back figure; each region is filled by how hard it worked this week.
+function bodySvg(lvl){
+  const f = k => lvl[k] === 2 ? 'var(--m-hi)' : lvl[k] === 1 ? 'var(--m-lo)' : 'var(--m-off)';
+  const sk = 'var(--m-skin)';
+  const r = (x, y, w, h, rx, fill, t) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" fill="${fill}">${t ? `<title>${t}</title>` : ''}</rect>`;
+  const pair = (x, y, w, h, rx, fill, t) => r(x, y, w, h, rx, fill, t) + r(120 - x - w, y, w, h, rx, fill, t);
+  const base = () => `<circle cx="60" cy="16" r="11" fill="${sk}"/>` + r(55, 26, 10, 9, 3, sk) + pair(20, 84, 10, 32, 5, sk) + r(43, 104, 34, 12, 5, sk) + pair(40, 228, 15, 7, 3, sk);
+  const front = base()
+    + pair(41, 37, 18, 23, 6, f('chest'), MU.chest)
+    + r(44, 62, 32, 41, 7, f('core'), MU.core)
+    + pair(24, 52, 11, 30, 5, f('bi'), MU.bi)
+    + pair(40, 117, 16, 55, 7, f('quad'), MU.quad)
+    + pair(56.5, 119, 3, 34, 1.5, f('add'), MU.add)
+    + pair(42, 176, 12, 50, 5, sk)
+    + `<ellipse cx="36" cy="44" rx="10" ry="8" fill="${f('sh')}"><title>${MU.sh}</title></ellipse><ellipse cx="84" cy="44" rx="10" ry="8" fill="${f('sh')}"><title>${MU.sh}</title></ellipse>`;
+  const back = base()
+    + r(40, 34, 40, 23, 7, f('upb'), MU.upb)
+    + pair(41, 59, 17, 34, 7, f('lats'), MU.lats)
+    + r(47, 95, 26, 11, 4, f('lowb'), MU.lowb)
+    + pair(24, 52, 11, 30, 5, f('tri'), MU.tri)
+    + pair(42, 108, 17, 21, 8, f('glu'), MU.glu)
+    + pair(41, 131, 16, 43, 7, f('ham'), MU.ham)
+    + pair(42, 178, 13, 46, 6, f('calf'), MU.calf)
+    + `<ellipse cx="36" cy="44" rx="10" ry="8" fill="${f('sh')}"/><ellipse cx="84" cy="44" rx="10" ry="8" fill="${f('sh')}"/>`;
+  return `<svg viewBox="0 0 260 252" role="img" aria-label="מפת שרירים: מלפנים ומאחור">
+    <g>${front}</g><g transform="translate(140 0)">${back}</g>
+    <text x="60" y="249" text-anchor="middle" font-size="11" fill="var(--muted)">מלפנים</text>
+    <text x="200" y="249" text-anchor="middle" font-size="11" fill="var(--muted)">מאחור</text></svg>`;
+}
+const muList = ks => ks.map(k => MU[k]).join(', ');
+function musclePanel(wi){
+  const m = weekMuscles(wi);
+  let h = `<section class="panel mus"><div class="mus-h"><h2>שרירים בכוח</h2><span class="meta">לפי התרגילים שנרשמו בקרוספיט</span></div>`;
+  if (!m.withEx) return h + `<p class="note">עוד לא נרשמו תרגילים בשבוע הזה. ב״רישום תוצאה״ של קרוספיט מוסיפים תרגילים ומשקלים. כאן יופיע אילו שרירים עבדו ואילו לא.</p>${m.noEx ? `<p class="foot">${m.noEx === 1 ? 'אימון קרוספיט אחד סומן' : `<span class="num">${m.noEx}</span> אימוני קרוספיט סומנו`} בלי תרגילים.</p>` : ''}</section>`;
+  h += `<div class="bodymap">${bodySvg(m.lvl)}</div>
+    <div class="legend"><span><i class="hi"></i>עיקריים</span><span><i class="lo"></i>משניים</span><span><i class="off"></i>לא עבדו</span></div>`;
+  h += m.off.length
+    ? `<div class="miss"><b>לא עבדו השבוע</b><div class="mchips">${m.off.map(k => `<span class="mchip">${MU[k]}</span>`).join('')}</div></div>`
+    : `<p class="note">כל קבוצות השרירים עבדו השבוע.</p>`;
+  if (m.noEx) h += `<p class="foot">${m.noEx === 1 ? 'אימון קרוספיט אחד סומן' : `<span class="num">${m.noEx}</span> אימוני קרוספיט סומנו`} בלי תרגילים, אז התמונה חלקית. אפשר להוסיף אותם ב״רישום תוצאה״.</p>`;
+  return h + `</section>`;
+}
+// On a CrossFit day that isn't logged yet: what this week hasn't touched (no legs on a no-legs day).
+function muscleTodo(wi, di){
+  const cf = items(wi, di).find(it => it.k === 'cf' && !exOf(LOGS.data[it.id]).length);
+  if (!cf) return '';
+  const m = weekMuscles(wi); if (!m.withEx) return '';
+  const noLegs = /בלי רגליים|ליבה בלבד/.test(cf.t);
+  const off = m.off.filter(k => !(noLegs && LEGS.includes(k)));
+  if (!off.length) return '';
+  return `<div class="mtodo"><b>עוד לא עבדו השבוע</b><div class="mchips">${off.map(k => `<span class="mchip">${MU[k]}</span>`).join('')}</div></div>`;
+}
+function muscleLine(wi){
+  const m = weekMuscles(wi); if (!m.withEx) return '';
+  const hi = MUK.filter(k => m.lvl[k] === 2), lo = MUK.filter(k => m.lvl[k] === 1);
+  return `שרירים בכוח (מ־${m.withEx} אימוני קרוספיט עם תרגילים${m.noEx ? `, ועוד ${m.noEx} בלי תרגילים` : ''}): עיקריים: ${muList(hi) || 'אין'}; משניים: ${muList(lo) || 'אין'}; לא עבדו: ${muList(m.off) || 'אין'}\n`;
+}
 
 /* ---------- views ---------- */
 const PLUS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
@@ -613,6 +822,7 @@ function vToday(){
   if (!isToday(selW, selD) && inPlan) h += `<button class="back" data-act="gotoday">חזרה להיום</button>`;
   if (showMoveHint()) h += `<div class="hint"><p>עברת מהגרסה הקודמת? שם, בלשונית ״תוכנית״, לוחצים ״ייצוא גיבוי״. כאן, באותה לשונית, לוחצים ״שחזור מגיבוי״ ובוחרים את הקובץ.</p><button data-act="hintx" aria-label="סגירת ההודעה">הבנתי</button></div>`;
   h += `<div class="cards">${items(selW, selD).map(card).join('')}</div>`;
+  h += muscleTodo(selW, selD);
   h += `<div class="strip" role="group" aria-label="ימי השבוע">` + DS.map((s, di) => {
     const dd = dayDate(selW, di);
     return `<button class="sd ${dayState(selW, di)}${di === selD ? ' sel' : ''}${isToday(selW, di) ? ' tod' : ''}" data-act="day" data-d="${di}" aria-label="יום ${DN[di]} ${fmt(dd)}"><b>${s}</b><span class="num">${fmt(dd)}</span><i></i></button>`;
@@ -649,7 +859,7 @@ function vWeek(){
     });
     h += `</div></div>`;
   });
-  return h + `</div>`;
+  return h + `</div>` + musclePanel(viewW);
 }
 function chart(){
   const Wd = 660, H = 210, pl = 30, pr = 6, pt = 16, pb = 26, max = 70;
@@ -725,7 +935,7 @@ function weekBlock(wi, label){
   const w = W[wi], st = weekStats(wi);
   let s = `${label}: שבוע ${wi+1} (${fmt(weekStart(wi))}–${fmt(dayDate(wi,6))}), ${PH[w.p].s}${w.tag ? ', ' + w.tag : ''}. ריצה: ${kmTxt(st.done)} מתוך ${st.plan} ק״מ, ${st.c}/${st.n} אימונים סומנו\n`;
   w.d.forEach((_, di) => { s += `- ${DN[di]} ${fmt(dayDate(wi, di))}: ${planLine(wi, di)}\n`; });
-  return s;
+  return s + muscleLine(wi);
 }
 function lastLogId(){
   let best = null, bt = -1;
@@ -798,6 +1008,7 @@ const COACH_RULES = `אתה המאמן האישי של עמית, ואתה עונ
 - אל תשנה את התוכנית בלי סיבה. העדף שינויים קטנים, ושמור על אימון איכות אחד וארוכה אחת בשבוע. אימון שפוספס לא ״משלימים״. ארוכה שפוספסה אפשר להזיז ליום הקל הבא רק אם אין למחרת אימון איכות.
 - אחרי תחרות, בדוק את הקצבים מול התוצאה. בחצי ים המלח: 1:41 ומטה, 5:00 במרתון ריאלי. מעל 1:44, מכוונים ל־5:10.
 - אם חסר נתון חשוב (דופק, איך הרגיש), שאל שאלה אחת.
+- בקרוספיט הוא רושם תרגילים ומשקלים. כשאותו תרגיל מופיע שוב, השווה משקלים. השורה ״שרירים בכוח״ בכל שבוע מראה מה עבד ומה לא; השתמש בה כדי להציע דגש לאימון הכוח הבא, בתוך הכללים (בשישי בלי רגליים כבדות).
 
 כאב ובריאות: אל תאבחן. כאב חד, כאב שמשנה את צורת הריצה, נפיחות, או כאב שלא עובר אחרי יום מנוחה: מחליפים את הריצה הבאה בשחייה או במנוחה ופונים לפיזיותרפיסט או לרופא. כאב בחזה, סחרחורת או קוצר נשימה חריג: מפסיקים מיד ופונים לרופא. מחלה עם חום: לא מתאמנים עד יום אחרי שהחום ירד.
 
@@ -1120,7 +1331,7 @@ function lastBackupText(){
 function markBackup(){ try { localStorage.setItem('tlv27backup', String(Date.now())); } catch(e) {} toast('הגיבוי נשמר'); if (view === 'plan') render(); }
 async function exportBackup(){
   const name = `marathon-backup-${today.getFullYear()}-${pad2(today.getMonth()+1)}-${pad2(today.getDate())}.json`;
-  const json = JSON.stringify({app: 'tlv27', v: 2, exported: new Date().toISOString(), done: DONE.data, logs: LOGS.data});
+  const json = JSON.stringify({app: 'tlv27', v: 2, exported: new Date().toISOString(), done: DONE.data, logs: LOGS.data, exmap: EXMAP.data});
   const blob = new Blob([json], {type: 'application/json'});
   try {
     const f = new File([blob], name, {type: 'application/json'});
@@ -1140,6 +1351,7 @@ function importBackup(file){
     const okObj = v => v && typeof v === 'object' && !Array.isArray(v);
     if (!j || j.app !== 'tlv27' || !okObj(j.done) || !okObj(j.logs)) { toast('הקובץ הזה לא נראה כמו גיבוי של האפליקציה.'); return; }
     const old = !(j.v >= 2); DONE.data = old ? remapV2(j.done) : j.done; LOGS.data = old ? remapV2(j.logs) : j.logs; DONE.save(); LOGS.save();
+    if (okObj(j.exmap)) { EXMAP.data = j.exmap; EXMAP.save(); }
     render(); toast(`שוחזרו ${Object.keys(j.done).length} סימונים ו־${Object.keys(j.logs).length} תוצאות`);
   };
   r.onerror = () => toast('לא הצלחתי לקרוא את הקובץ.');
@@ -1200,11 +1412,11 @@ const PACE_HTML = `
 </details>`;
 
 /* ---------- result sheet ---------- */
-let sheetId = null, sheetRpe = 0;
+let sheetId = null, sheetRpe = 0, sheetT = '', sheetEx = [];
 const sheetImgs = [];
 const onlyDigits = v => String(v || '').replace(/\D/g, '');
-function timeBoxes(ph){
-  return `<div class="fl wide"><span>זמן</span>
+function timeBoxes(ph, label){
+  return `<div class="fl wide"><span>${label || 'זמן'}</span>
     <div class="split">
       <input class="in" id="f-th" inputmode="numeric" maxlength="2" placeholder="0" aria-label="שעות">
       <b>:</b><input class="in" id="f-tm" inputmode="numeric" maxlength="3" placeholder="${ph[0]}" aria-label="דקות">
@@ -1244,17 +1456,69 @@ function gBlock(){
   return `<button class="gbtn" data-sh="gimg">${CAM}צירוף צילומי מסך מהגרמין</button>`;
 }
 function clearSheetImg(){ dropImgs(sheetImgs); }
+/* exercise rows (CrossFit only) */
+const PLUS_S = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
+const blankEx = () => ({n:'', w:'', r:'', p:[], s:[], own:false, open:false});
+function exPrev(name, before){
+  const key = exKey(name); if (!key) return null;
+  let best = null;
+  Object.keys(LOGS.data).forEach(id => {
+    const it = itemById(id); if (!it) return;
+    const at = it.wi*7 + it.di; if (at >= before) return;
+    exOf(LOGS.data[id]).forEach(e => { if ((e.w || e.r) && exKey(e.n) === key && (!best || at > best.at)) best = {at, e, it}; });
+  });
+  return best;
+}
+function exPrevHTML(e){
+  const it = itemById(sheetId); if (!it || !e.n.trim()) return '';
+  const b = exPrev(e.n, it.wi*7 + it.di); if (!b) return '';
+  return `פעם קודמת, <span class="num">${fmt(dayDate(b.it.wi, b.it.di))}</span>: ${b.e.w ? `<span class="num">${esc(b.e.w)}</span> ק״ג` : 'משקל גוף'}${b.e.r ? ` · ${esc(b.e.r)}` : ''}`;
+}
+function exMuscHTML(e, i){
+  if (e.open) return `<div class="mpick">${MUK.map(k => { const st = e.p.includes(k) ? 2 : e.s.includes(k) ? 1 : 0; return `<button class="mc l${st}" data-sh="mtog" data-i="${i}" data-m="${k}" aria-pressed="${st > 0}">${MU[k]}</button>`; }).join('')}</div>
+    <div class="mhint"><span>לחיצה מחליפה: עיקרי, משני, בלי</span><button class="mlink" data-sh="mdone" data-i="${i}">סיום</button></div>`;
+  if (!e.n.trim()) return '';
+  const tags = [...e.p.map(k => `<span class="mc l2">${MU[k]}</span>`), ...e.s.map(k => `<span class="mc l1">${MU[k]}</span>`)];
+  return `<div class="mtags">${tags.length ? tags.join('') : '<span class="mnone">לא זיהיתי את התרגיל.</span>'}<button class="mlink" data-sh="medit" data-i="${i}">${tags.length ? 'שינוי' : 'בחירת שרירים'}</button></div>`;
+}
+function exRowHTML(e, i){
+  return `<div class="exr" data-i="${i}">
+    <div class="exl"><input class="in exn" id="ex-n${i}" list="exnames" dir="auto" autocomplete="off" placeholder="Front Squat" value="${esc(e.n)}" aria-label="תרגיל ${i+1}"><button class="exx" data-sh="exdel" data-i="${i}" aria-label="הסרת התרגיל">${XS}</button></div>
+    <div class="exl2"><label class="fl">משקל (ק״ג)<input class="in exw" id="ex-w${i}" inputmode="decimal" placeholder="משקל גוף" value="${esc(e.w)}"></label><label class="fl">חזרות / סבבים<input class="in exrp" id="ex-r${i}" dir="auto" placeholder="7×10" value="${esc(e.r)}"></label></div>
+    <div class="exm" id="ex-m${i}">${exMuscHTML(e, i)}</div>
+    <div class="exp" id="ex-p${i}">${exPrevHTML(e)}</div>
+  </div>`;
+}
+function renderEx(){ const box = document.getElementById('exlist'); if (box) box.innerHTML = sheetEx.map(exRowHTML).join(''); }
+function refreshExRow(i){
+  const e = sheetEx[i]; if (!e) return;
+  const m = document.getElementById('ex-m' + i); if (m) m.innerHTML = exMuscHTML(e, i);
+  const p = document.getElementById('ex-p' + i); if (p) p.innerHTML = exPrevHTML(e);
+}
+function setExName(e, name){
+  e.n = name;
+  if (e.own) return;
+  const m = musclesFor(name); e.p = m ? m.p : []; e.s = m ? m.s : [];
+}
+function exSection(){
+  return `<div class="exs"><div class="exs-h"><b>תרגילים ומשקלים</b><span>השרירים מזוהים לפי שם התרגיל</span></div>
+    <div class="exlist" id="exlist">${sheetEx.map(exRowHTML).join('')}</div>
+    <button class="exadd" data-sh="exadd">${PLUS_S}הוספת תרגיל</button>
+    <datalist id="exnames">${EXDB.map(e => `<option value="${esc(e.n)}"></option>`).join('')}</datalist></div>`;
+}
 function openLog(id){
   const it = itemById(id); if (!it) return;
   sheetId = id; clearSheetImg();
   const lg = LOGS.data[id] || {}, t = logType(it);
-  sheetRpe = lg.rpe || 0;
+  sheetRpe = lg.rpe || 0; sheetT = t;
+  sheetEx = exOf(lg).map(e => ({n: e.n, w: e.w || '', r: e.r || '', p: [...(e.p || [])], s: [...(e.s || [])], own: !!EXMAP.data[exNorm(e.n)], open: false}));
+  if (t === 'cf' && !sheetEx.length) sheetEx.push(blankEx());
   const d = dayDate(it.wi, it.di);
   const hrF = `<label class="fl">דופק ממוצע<input class="in" id="f-hr" inputmode="numeric" maxlength="3" placeholder="145"></label>`;
   const distF = t === 'swim'
     ? `<label class="fl">מרחק (מ׳)<input class="in" id="f-dist" inputmode="numeric" maxlength="5" placeholder="2000"></label>`
     : `<div class="fl"><span>מרחק</span><div class="split"><input class="in" id="f-dk" inputmode="numeric" maxlength="2" placeholder="${it.km || 5}" aria-label="קילומטרים"><b>.</b><input class="in" id="f-dd" inputmode="numeric" maxlength="2" placeholder="00" aria-label="מאיות קילומטר"><span class="u">ק״מ</span></div></div>`;
-  const fields = t === 'cf' ? timeBoxes(['60', '00'])
+  const fields = t === 'cf' ? hrF + timeBoxes(['28', '00'], 'זמן התוצאה')
     : distF + hrF + timeBoxes(t === 'swim' ? ['48', '30'] : ['28', '30']);
   const el = document.createElement('div');
   el.className = 'sheet-bg'; el.id = 'sheetbg';
@@ -1262,7 +1526,7 @@ function openLog(id){
     <div class="sh-head"><div><div class="eyebrow">יום ${DN[it.di]} <span class="num">${fmt(d)}</span> · שבוע <span class="num">${it.wi+1}</span></div><h2 id="sh-t" class="k-${it.k}">${LONG[it.k]}</h2><p class="meta">מתוכנן: ${it.t}</p></div>
       <button class="iconbtn" data-sh="close" aria-label="סגירה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
     <div class="fields">${fields}</div>
-    ${t === 'cf' ? '' : '<div class="pace" id="f-pace"></div>'}
+    ${t === 'cf' ? exSection() : '<div class="pace" id="f-pace"></div>'}
     <div><div class="fl">מאמץ (1–10)</div><div class="rpe" id="f-rpe">${Array.from({length:10}, (_, i) => `<button data-rpe="${i+1}" aria-pressed="${sheetRpe === i+1}">${i+1}</button>`).join('')}</div><div class="rpe-hint"><span>קל מאוד</span><span>מקסימלי</span></div></div>
     <label class="fl">הערות<textarea class="in" id="f-note" rows="3" placeholder="איך הרגיש, ספליטים, כאבים, חום, רוח"></textarea></label>
     <div id="g-box">${gBlock()}</div>
@@ -1280,6 +1544,15 @@ function openLog(id){
   const NEXT = {'f-tm': 'f-ts', 'f-dk': 'f-dd'};
   el.addEventListener('input', e => {
     const x = e.target;
+    const row = x.closest && x.closest('.exr');
+    if (row) {
+      const i = +row.dataset.i, ex = sheetEx[i]; if (!ex) return;
+      if (x.classList.contains('exn')) { setExName(ex, x.value); refreshExRow(i); }
+      else if (x.classList.contains('exw')) ex.w = x.value.replace(',', '.').replace(/[^\d.\/]/g, '');
+      else if (x.classList.contains('exrp')) ex.r = x.value;
+      if (x.classList.contains('exw') && x.value !== ex.w) x.value = ex.w;
+      return;
+    }
     if (x.matches && x.matches('.split input')) {
       const clean = onlyDigits(x.value); if (clean !== x.value) x.value = clean;
       if (NEXT[x.id] && clean.length === 2 && e.inputType && e.inputType.startsWith('insert')) { const n = document.getElementById(NEXT[x.id]); if (n) n.focus(); }
@@ -1301,6 +1574,16 @@ function openLog(id){
     const act = a.dataset.sh;
     if (act === 'close') closeLog();
     else if (act === 'gimg') document.getElementById('g-in').click();
+    else if (act === 'exadd') { sheetEx.push(blankEx()); renderEx(); const n = document.getElementById('ex-n' + (sheetEx.length - 1)); if (n) n.focus(); }
+    else if (act === 'exdel') { sheetEx.splice(+a.dataset.i, 1); if (!sheetEx.length) sheetEx.push(blankEx()); renderEx(); }
+    else if (act === 'medit' || act === 'mdone') { const ex = sheetEx[+a.dataset.i]; if (ex) { ex.open = act === 'medit'; refreshExRow(+a.dataset.i); } }
+    else if (act === 'mtog') {
+      const i = +a.dataset.i, ex = sheetEx[i], k = a.dataset.m; if (!ex) return;
+      const st = ex.p.includes(k) ? 2 : ex.s.includes(k) ? 1 : 0;
+      ex.p = ex.p.filter(x => x !== k); ex.s = ex.s.filter(x => x !== k);
+      if (st === 0) ex.p.push(k); else if (st === 2) ex.s.push(k);
+      ex.own = true; refreshExRow(i);
+    }
     else if (act === 'gx') { dropImgs(sheetImgs, +a.dataset.i); document.getElementById('g-box').innerHTML = gBlock(); }
     else if (act === 'del') { delete LOGS.data[sheetId]; LOGS.save(); closeLog(); render(); }
     else saveLog(act === 'send');
@@ -1317,6 +1600,19 @@ function saveLog(send){
   const hr = onlyDigits(g('f-hr')); if (hr && +hr) lg.hr = String(+hr);
   if (sheetRpe) lg.rpe = sheetRpe;
   const note = g('f-note'); if (note) lg.note = note.slice(0, 1000);
+  if (t === 'cf') {
+    let mapChanged = false;
+    const ex = sheetEx.filter(e => e.n.trim()).slice(0, 30).map(e => {
+      const o = {n: e.n.trim().slice(0, 60)};
+      if (e.w.trim()) o.w = e.w.trim().slice(0, 12);
+      if (e.r.trim()) o.r = e.r.trim().slice(0, 30);
+      o.p = e.p.filter(k => MU[k]); o.s = e.s.filter(k => MU[k]);
+      if (e.own) { EXMAP.data[exNorm(o.n)] = {p: o.p, s: o.s}; mapChanged = true; }
+      return o;
+    });
+    if (ex.length) lg.ex = ex;
+    if (mapChanged) EXMAP.save();
+  }
   const has = Object.keys(lg).length;
   const imgs = sheetImgs.splice(0);   // keep the photos before closeLog clears the preview
   if (has) { lg.ts = Date.now(); LOGS.data[id] = lg; } else delete LOGS.data[id];
