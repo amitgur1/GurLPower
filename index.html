@@ -240,6 +240,22 @@ input.in:focus,textarea.in:focus{outline:2px solid var(--accent);outline-offset:
 .btn.pri{background:var(--accent);color:var(--on-accent);grid-column:1/-1}
 .btn.sec{border:1px solid var(--line)}
 .btn.del{border:1px solid var(--line);color:var(--race)}
+/* result sheet: split time/distance boxes (LTR like the watch shows them) + Garmin photo */
+.fl.wide{grid-column:1/-1}
+.split{display:flex;align-items:center;gap:4px;direction:ltr}
+.split input.in{text-align:center;padding:10px 4px;min-width:0;flex:1}
+.split b{font-weight:600;color:var(--muted);font-size:18px}
+.split .u{font-size:13px;color:var(--muted);padding-inline-start:4px;direction:rtl}
+.sub{display:flex;direction:ltr;gap:4px;font-size:11px;color:var(--muted)}
+.sub span{flex:1;text-align:center}
+.sub i{width:10px;flex:none}
+.gbtn{display:flex;align-items:center;justify-content:center;gap:8px;border:1.5px dashed var(--accent);color:var(--accent);border-radius:12px;padding:11px 12px;font-weight:500;width:100%}
+.gbtn svg{width:20px;height:20px}
+.gatt{display:flex;align-items:center;gap:10px;background:var(--accent-soft);border-radius:12px;padding:8px 10px;font-size:13px}
+.gatt img{width:48px;height:48px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.gatt span{flex:1;min-width:0}
+.gatt button{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center}
+.gatt button svg{width:14px;height:14px}
 
 @media (max-width:380px){.wo{grid-template-columns:38px 1fr 30px;gap:10px;padding:14px 12px}.wo .ico{width:38px;height:38px}.wt{font-size:15px}.wday{grid-template-columns:46px 1fr;padding-inline:12px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
@@ -344,12 +360,15 @@ const W = [
  ]}
 ];
 const SWIMS = ['מבחן CSS: 400 ו־200 מ׳ על זמן (1.6 ק״מ). תוצאה: CSS 2:14','8×100 ב־2:19 (CSS+5), מנוחה 15 שנ׳ + 800 רצוף ב־2:25 (2 ק״מ)','4×200 ב־2:14 (CSS), מנוחה 20 שנ׳ + 1200 רצוף ב־2:25 (2.4 ק״מ)','2.5 ק״מ רצוף, בים אם אפשר (ים 2:45 / בריכה 2:25)','1.5 ק״מ קל','5×200 בקצב CSS + 1000 רצוף (2.5 ק״מ)','3×400 בקצב CSS+3 + 1000 רצוף (2.8 ק״מ)','10×100 בקצב CSS + 1400 רצוף (3 ק״מ)','3 ק״מ רצוף, ק״מ אחרון בקצב תחרות (בריכה 2:20 / ים 2:40)','2×800 ב־2:20, מנוחה 30 שנ׳ + 800 רצוף ב־2:25 (3 ק״מ)','6×200 בקצב CSS + 700 קל (2.5 ק״מ)','2 ק״מ קל + תרגילי טכניקה','חזרה גנרלית: 4 ק״מ רצוף בים ב־2:40–2:45','2 ק״מ קל','3×500 ב־2:20 בבריכה או 2:40 בים (2.5 ק״מ)','2 ק״מ קל','1.5 ק״מ קל מאוד או מנוחה',null,null,'1.5 ק״מ קל','1.5 ק״מ קל',null];
+// Technique swim: Wednesday in weeks 1–2, Monday from week 3 (11.10) on, except when Monday is a rest day.
+const TECH_FROM = 2;
+const TECH_DAY = i => (i >= TECH_FROM && !W[i].d[1].some(it => it[0] === 'rest')) ? 1 : 3;
 W.forEach((w,i) => {
   const sat = w.d[6];
   const si = sat.findIndex(it => it[0]==='swim');
   if (si > -1) { if (SWIMS[i]) sat[si] = ['swim', SWIMS[i]]; else sat.splice(si,1); }
   else if (SWIMS[i]) sat.push(['swim', SWIMS[i]]);
-  if (i !== 4) w.d[3].unshift(['swim', i===21 ? 'אימון טכניקה קל בבוקר' : 'אימון טכניקה בבוקר']);
+  if (i !== 4) w.d[TECH_DAY(i)].unshift(['swim', i===21 ? 'אימון טכניקה קל בבוקר' : 'אימון טכניקה בבוקר']);
 });
 const PH = [
  {n:'שלב 1 · בסיס וריצת הלילה', s:'בסיס', w:'שבועות 1–5', t:'בונים נפח בהדרגה מ־22 לכ־30 ק״מ בשבוע, עם אימון איכות אחד שמכוון ל־15 ק״מ ב־28.10.'},
@@ -412,6 +431,30 @@ function makeDoc(key, empty){
 }
 const DONE = makeDoc('tlv27', () => ({}));
 const LOGS = makeDoc('tlv27log', () => ({}));
+// v2 moved the technique swim from Wednesday to Monday (week 3 on). Item ids are positional, so remap saved marks/results once.
+function remapV2(obj){
+  const out = {};
+  Object.keys(obj).forEach(id => {
+    const m = /^w(\d+)d(\d+)i(\d+)$/.exec(id); let nid = id;
+    if (m) {
+      const wi = +m[1], di = +m[2], ii = +m[3];
+      if (wi !== 4 && wi < NW && TECH_DAY(wi) === 1) {
+        if (di === 3) nid = ii === 0 ? `w${wi}d1i0` : `w${wi}d3i${ii-1}`;
+        else if (di === 1) nid = `w${wi}d1i${ii+1}`;
+      }
+    }
+    out[nid] = obj[id];
+  });
+  return out;
+}
+try {
+  if (localStorage.getItem('tlv27mig') !== '2') {
+    DONE.data = remapV2(DONE.data); LOGS.data = remapV2(LOGS.data);
+    if (Object.keys(DONE.data).length) DONE.save();
+    if (Object.keys(LOGS.data).length) LOGS.save();
+    localStorage.setItem('tlv27mig', '2');
+  }
+} catch(e) {}
 // Ask the browser not to clear this app's data under storage pressure (Chrome/Android honours it; harmless elsewhere).
 try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch(e) {}
 
@@ -663,15 +706,17 @@ function coachText(){
   return cmode === 'full' ? fullMsg() : weekMsg();
 }
 const canShare = !!navigator.share;
+let coachImg = null, coachImgUrl = '';
 function vCoach(){
   const t = coachText();
   return `<section class="coachhead"><h1>המאמן</h1><p class="meta">כאן מכינים עדכון מסודר על האימונים, ושולחים אותו לשיחה עם המאמן.</p></section>
   <section class="panel">
     <div class="seg" role="group" aria-label="מה לשלוח">${MODES.map(m => `<button data-act="mode" data-m="${m[0]}" aria-pressed="${cmode === m[0]}">${m[1]}</button>`).join('')}</div>
     ${t ? `<textarea class="sumbox" id="sumbox" readonly aria-label="העדכון שיישלח">${esc(t)}</textarea>
+    ${canShareFiles ? (coachImg ? `<div class="gatt"><img src="${coachImgUrl}" alt="צילום המסך מהגרמין"><span>הצילום יישלח יחד עם העדכון.</span><button data-act="cimgx" aria-label="הסרת הצילום">${XS}</button></div>` : `<button class="gbtn" data-act="cimg">${CAM}צירוף צילום מסך מהגרמין</button>`) + '<input type="file" id="cimgin" accept="image/*" hidden>' : ''}
     <div class="acts">${canShare ? '<button class="btn pri" data-act="share">שיתוף</button><button class="btn sec" data-act="copy">העתקה</button>' : '<button class="btn pri" data-act="copy" style="grid-column:1/-1">העתקה</button>'}</div>`
     : `<p class="note">עוד לא נרשמה תוצאה. בכרטיס האימון לוחצים על ״רישום תוצאה״, ואז אפשר לשלוח אותה מכאן.</p>`}
-    <p class="note">אפשר לצרף לשיחה גם צילום מסך מהשעון. המאמן יקרא ממנו את הנתונים.</p>
+    <p class="note">${canShareFiles ? 'בשיתוף בוחרים ב־Claude, והעדכון והצילום נכנסים לשיחה חדשה. המאמן קורא מהצילום מרחק, זמן, דופק וספליטים.' : 'אפשר לצרף לשיחה גם צילום מסך מהשעון. המאמן יקרא ממנו את הנתונים.'}</p>
   </section>
   <section class="panel"><h2>איך זה עובד</h2>
     <ol class="steps">
@@ -714,7 +759,7 @@ function lastBackupText(){
 function markBackup(){ try { localStorage.setItem('tlv27backup', String(Date.now())); } catch(e) {} toast('הגיבוי נשמר'); if (view === 'plan') render(); }
 async function exportBackup(){
   const name = `marathon-backup-${today.getFullYear()}-${pad2(today.getMonth()+1)}-${pad2(today.getDate())}.json`;
-  const json = JSON.stringify({app: 'tlv27', v: 1, exported: new Date().toISOString(), done: DONE.data, logs: LOGS.data});
+  const json = JSON.stringify({app: 'tlv27', v: 2, exported: new Date().toISOString(), done: DONE.data, logs: LOGS.data});
   const blob = new Blob([json], {type: 'application/json'});
   try {
     const f = new File([blob], name, {type: 'application/json'});
@@ -733,7 +778,7 @@ function importBackup(file){
     try { j = JSON.parse(r.result); } catch(e) {}
     const okObj = v => v && typeof v === 'object' && !Array.isArray(v);
     if (!j || j.app !== 'tlv27' || !okObj(j.done) || !okObj(j.logs)) { toast('הקובץ הזה לא נראה כמו גיבוי של האפליקציה.'); return; }
-    DONE.data = j.done; LOGS.data = j.logs; DONE.save(); LOGS.save();
+    const old = !(j.v >= 2); DONE.data = old ? remapV2(j.done) : j.done; LOGS.data = old ? remapV2(j.logs) : j.logs; DONE.save(); LOGS.save();
     render(); toast(`שוחזרו ${Object.keys(j.done).length} סימונים ו־${Object.keys(j.logs).length} תוצאות`);
   };
   r.onerror = () => toast('לא הצלחתי לקרוא את הקובץ.');
@@ -773,9 +818,9 @@ const PACE_HTML = `
 <section class="panel"><h2>שבוע רגיל</h2>
   <table>
     <tr><td>ראשון</td><td><span class="wk k-easy">ריצה קלה</span></td></tr>
-    <tr><td>שני</td><td><span class="wk k-cf">קרוספיט</span></td></tr>
+    <tr><td>שני</td><td><span class="wk k-swim">טכניקת שחייה</span> בבוקר + <span class="wk k-cf">קרוספיט</span></td></tr>
     <tr><td>שלישי</td><td><span class="wk k-q">אימון איכות</span> (אינטרוולים / טמפו)</td></tr>
-    <tr><td>רביעי</td><td><span class="wk k-swim">טכניקת שחייה</span> בבוקר + <span class="wk k-cf">קרוספיט</span> בערב</td></tr>
+    <tr><td>רביעי</td><td><span class="wk k-cf">קרוספיט</span></td></tr>
     <tr><td>חמישי</td><td><span class="wk k-easy">ריצה בינונית</span>, לפעמים עם קטע בקצב מרתון</td></tr>
     <tr><td>שישי</td><td><span class="wk k-cf">קרוספיט</span> בלי רגליים כבדות</td></tr>
     <tr><td>שבת</td><td><span class="wk k-long">ריצה ארוכה</span> בבוקר + <span class="wk k-swim">שחייה</span> אחה״צ</td></tr>
@@ -784,7 +829,7 @@ const PACE_HTML = `
 <details class="rules"><summary>כללים לקרוספיט ולשחייה ${CHEV_L}</summary>
   <ul>
     <li><b>קרוספיט בשישי ולא בשבת.</b> ארוכה, שחייה וקרוספיט באותו יום זה יותר מדי, ואחרי ארוכה של 25 ק״מ ומעלה הרגליים לא יהיו שם. אם שישי לא מתאים, אפשר להעביר לחמישי בערב.</li>
-    <li><b>שחייה:</b> טכניקה ברביעי בבוקר, והאימון העיקרי בשבת אחה״צ (סטים בקצב CSS, שחיות רצופות, וחזרה גנרלית של 4 ק״מ ב־26.12). בשבתות עם ארוכה של 24 ק״מ ומעלה השחייה קלה.</li>
+    <li><b>שחייה:</b> טכניקה בשני בבוקר (בשבועות 1–2 ובשבוע של החצי ברביעי), והאימון העיקרי בשבת אחה״צ (סטים בקצב CSS, שחיות רצופות, וחזרה גנרלית של 4 ק״מ ב־26.12). בשבתות עם ארוכה של 24 ק״מ ומעלה השחייה קלה.</li>
     <li><b>קרוספיט בשישי בלי עבודת רגליים כבדה</b> (סקוואט כבד, קפיצות בנפח גבוה, ריצות בתוך WOD). הדגש על פלג גוף עליון, ליבה ושרשרת אחורית קלה.</li>
     <li><b>מדצמבר (שבוע 11 והלאה)</b> מורידים עוצמה ברגליים בכל הקרוספיט: משקלים בינוניים, בלי חזרות עד כשל.</li>
     <li><b>לא עושים קרוספיט ביום של ריצת איכות,</b> ויום לפני אימון איכות לא עושים רגליים קשות.</li>
@@ -794,17 +839,65 @@ const PACE_HTML = `
 </details>`;
 
 /* ---------- result sheet ---------- */
-let sheetId = null, sheetRpe = 0;
+let sheetId = null, sheetRpe = 0, sheetImg = null, sheetImgUrl = '';
+const CAM = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-2.5h6L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.3"/></svg>';
+const XS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+// A Garmin screenshot travels to Claude through the phone's share sheet, together with the result text.
+const canShareFiles = !!navigator.canShare && (() => { try { return navigator.canShare({files: [new File(['x'], 'g.png', {type: 'image/png'})]}); } catch(e) { return false; } })();
+const onlyDigits = v => String(v || '').replace(/\D/g, '');
+function timeBoxes(ph){
+  return `<div class="fl wide"><span>זמן</span>
+    <div class="split">
+      <input class="in" id="f-th" inputmode="numeric" maxlength="2" placeholder="0" aria-label="שעות">
+      <b>:</b><input class="in" id="f-tm" inputmode="numeric" maxlength="3" placeholder="${ph[0]}" aria-label="דקות">
+      <b>:</b><input class="in" id="f-ts" inputmode="numeric" maxlength="2" placeholder="${ph[1]}" aria-label="שניות">
+    </div>
+    <div class="sub"><span>שעות</span><i></i><span>דקות</span><i></i><span>שניות</span></div></div>`;
+}
+function setTime(str){
+  const sec = parseTime(str); if (!sec) return;
+  const h = Math.floor(sec/3600), m = Math.floor(sec%3600/60), s = sec%60;
+  const set = (i, v) => { const x = document.getElementById(i); if (x) x.value = v; };
+  set('f-th', h ? String(h) : ''); set('f-tm', String(m)); set('f-ts', String(s).padStart(2, '0'));
+}
+function timeVal(){
+  const g = i => { const x = document.getElementById(i); return x ? onlyDigits(x.value) : ''; };
+  const h = g('f-th'), m = g('f-tm'), s = g('f-ts');
+  if (!h && !m && !s) return '';
+  const tot = (+h||0)*3600 + (+m||0)*60 + (+s||0);
+  return tot ? fmtDur(tot) : '';
+}
+function setDist(t, v){
+  if (v == null || v === '' || isNaN(parseFloat(v))) return;
+  if (t === 'swim') { const x = document.getElementById('f-dist'); if (x) x.value = String(Math.round(parseFloat(v))); return; }
+  const [k, d] = String(parseFloat(v)).split('.');
+  document.getElementById('f-dk').value = k; document.getElementById('f-dd').value = d ? d.slice(0, 2) : '';
+}
+function distVal(t){
+  if (t === 'cf') return '';
+  if (t === 'swim') { const x = document.getElementById('f-dist'); return x ? onlyDigits(x.value) : ''; }
+  const k = onlyDigits(document.getElementById('f-dk').value), d = onlyDigits(document.getElementById('f-dd').value);
+  if (!k && !d) return '';
+  return (k || '0') + (d ? '.' + d : '');
+}
+function gBlock(){
+  if (sheetImg) return `<div class="gatt"><img src="${sheetImgUrl}" alt="צילום המסך מהגרמין"><span>הצילום יישלח למאמן יחד עם התוצאה, ב״שמירה ושליחה למאמן״.</span><button data-sh="gx" aria-label="הסרת הצילום">${XS}</button></div>`;
+  if (!canShareFiles) return '';
+  return `<button class="gbtn" data-sh="gimg">${CAM}צירוף צילום מסך מהגרמין</button>`;
+}
+function clearSheetImg(){ if (sheetImgUrl) try { URL.revokeObjectURL(sheetImgUrl); } catch(e) {} sheetImg = null; sheetImgUrl = ''; }
 function openLog(id){
   const it = itemById(id); if (!it) return;
-  sheetId = id;
+  sheetId = id; clearSheetImg();
   const lg = LOGS.data[id] || {}, t = logType(it);
   sheetRpe = lg.rpe || 0;
   const d = dayDate(it.wi, it.di);
-  const fields = t === 'cf' ? `<label class="fl">משך<input class="in" id="f-time" placeholder="למשל 60:00" inputmode="numeric"></label>`
-    : `<label class="fl">${t === 'swim' ? 'מרחק (מ׳)' : 'מרחק (ק״מ)'}<input class="in" id="f-dist" inputmode="decimal" placeholder="${t === 'swim' ? '2000' : (it.km || 5)}"></label>
-       <label class="fl">זמן<input class="in" id="f-time" inputmode="numeric" placeholder="${t === 'swim' ? '48:30' : '28:30'}"></label>
-       <label class="fl">דופק ממוצע<input class="in" id="f-hr" inputmode="numeric" placeholder="145"></label>`;
+  const hrF = `<label class="fl">דופק ממוצע<input class="in" id="f-hr" inputmode="numeric" maxlength="3" placeholder="145"></label>`;
+  const distF = t === 'swim'
+    ? `<label class="fl">מרחק (מ׳)<input class="in" id="f-dist" inputmode="numeric" maxlength="5" placeholder="2000"></label>`
+    : `<div class="fl"><span>מרחק</span><div class="split"><input class="in" id="f-dk" inputmode="numeric" maxlength="2" placeholder="${it.km || 5}" aria-label="קילומטרים"><b>.</b><input class="in" id="f-dd" inputmode="numeric" maxlength="2" placeholder="00" aria-label="מאיות קילומטר"><span class="u">ק״מ</span></div></div>`;
+  const fields = t === 'cf' ? timeBoxes(['60', '00'])
+    : distF + hrF + timeBoxes(t === 'swim' ? ['48', '30'] : ['28', '30']);
   const el = document.createElement('div');
   el.className = 'sheet-bg'; el.id = 'sheetbg';
   el.innerHTML = `<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-t">
@@ -814,15 +907,35 @@ function openLog(id){
     ${t === 'cf' ? '' : '<div class="pace" id="f-pace"></div>'}
     <div><div class="fl">מאמץ (1–10)</div><div class="rpe" id="f-rpe">${Array.from({length:10}, (_, i) => `<button data-rpe="${i+1}" aria-pressed="${sheetRpe === i+1}">${i+1}</button>`).join('')}</div><div class="rpe-hint"><span>קל מאוד</span><span>מקסימלי</span></div></div>
     <label class="fl">הערות<textarea class="in" id="f-note" rows="3" placeholder="איך הרגיש, ספליטים, כאבים, חום, רוח"></textarea></label>
+    <div id="g-box">${gBlock()}</div>
+    <input type="file" id="g-in" accept="image/*" hidden>
     <div class="sh-act"><button class="btn pri" data-sh="send">שמירה ושליחה למאמן</button><button class="btn sec" data-sh="save">שמירה</button>${LOGS.data[id] ? '<button class="btn del" data-sh="del">מחיקת התוצאה</button>' : ''}</div>
   </div>`;
   document.body.appendChild(el);
   document.body.style.overflow = 'hidden';
-  const set = (i, v) => { const x = document.getElementById(i); if (x && v != null) x.value = v; };
-  set('f-dist', lg.dist); set('f-time', lg.time); set('f-hr', lg.hr); set('f-note', lg.note);
-  const upPace = () => { const p = document.getElementById('f-pace'); if (!p) return; const dv = document.getElementById('f-dist'), tv = document.getElementById('f-time'); const pc = paceOf(t, dv.value, tv.value); p.textContent = pc ? 'קצב: ' + pc : ''; };
+  setDist(t, lg.dist); setTime(lg.time);
+  const hrIn = document.getElementById('f-hr'); if (hrIn && lg.hr) hrIn.value = lg.hr;
+  if (lg.note) document.getElementById('f-note').value = lg.note;
+  const upPace = () => { const p = document.getElementById('f-pace'); if (!p) return; const pc = paceOf(t, distVal(t), timeVal()); p.textContent = pc ? 'קצב: ' + pc : ''; };
   upPace();
-  el.addEventListener('input', upPace);
+  // Two digits of minutes or whole km: jump to the next box.
+  const NEXT = {'f-tm': 'f-ts', 'f-dk': 'f-dd'};
+  el.addEventListener('input', e => {
+    const x = e.target;
+    if (x.matches && x.matches('.split input')) {
+      const clean = onlyDigits(x.value); if (clean !== x.value) x.value = clean;
+      if (NEXT[x.id] && clean.length === 2 && e.inputType && e.inputType.startsWith('insert')) { const n = document.getElementById(NEXT[x.id]); if (n) n.focus(); }
+    }
+    upPace();
+  });
+  el.addEventListener('change', e => {
+    if (e.target.id !== 'g-in') return;
+    const f = e.target.files && e.target.files[0]; e.target.value = '';
+    if (!f) return;
+    if (f.type && !f.type.startsWith('image/')) { toast('אפשר לצרף רק תמונה.'); return; }
+    clearSheetImg(); sheetImg = f; sheetImgUrl = URL.createObjectURL(f);
+    document.getElementById('g-box').innerHTML = gBlock();
+  });
   el.addEventListener('click', e => {
     if (e.target === el) return closeLog();
     const r = e.target.closest('[data-rpe]');
@@ -830,28 +943,39 @@ function openLog(id){
     const a = e.target.closest('[data-sh]'); if (!a) return;
     const act = a.dataset.sh;
     if (act === 'close') closeLog();
+    else if (act === 'gimg') document.getElementById('g-in').click();
+    else if (act === 'gx') { clearSheetImg(); document.getElementById('g-box').innerHTML = gBlock(); }
     else if (act === 'del') { delete LOGS.data[sheetId]; LOGS.save(); closeLog(); render(); }
     else saveLog(act === 'send');
   });
 }
-function closeLog(){ const el = document.getElementById('sheetbg'); if (el) el.remove(); document.body.style.overflow = ''; sheetId = null; }
+function closeLog(){ const el = document.getElementById('sheetbg'); if (el) el.remove(); document.body.style.overflow = ''; sheetId = null; clearSheetImg(); }
 function saveLog(send){
   const id = sheetId, it = itemById(id); if (!it) return;
+  const t = logType(it);
   const g = i => { const x = document.getElementById(i); return x ? x.value.trim() : ''; };
   const lg = {};
-  const dist = g('f-dist').replace(',', '.'); if (dist && !isNaN(parseFloat(dist))) lg.dist = String(parseFloat(dist));
-  const time = g('f-time'); if (time && parseTime(time)) lg.time = fmtDur(parseTime(time));
-  const hr = g('f-hr'); if (hr && +hr) lg.hr = String(Math.round(+hr));
+  const dist = distVal(t); if (dist && parseFloat(dist) > 0) lg.dist = String(parseFloat(dist));
+  const time = timeVal(); if (time) lg.time = time;
+  const hr = onlyDigits(g('f-hr')); if (hr && +hr) lg.hr = String(+hr);
   if (sheetRpe) lg.rpe = sheetRpe;
   const note = g('f-note'); if (note) lg.note = note.slice(0, 1000);
   const has = Object.keys(lg).length;
+  const img = sheetImg; sheetImg = null;   // keep the photo before closeLog clears the preview
   if (has) { lg.ts = Date.now(); LOGS.data[id] = lg; } else delete LOGS.data[id];
   LOGS.save();
-  if (has && !DONE.data[id]) { DONE.data[id] = true; DONE.save(); justId = id; }
+  if ((has || (send && img)) && !DONE.data[id]) { DONE.data[id] = true; DONE.save(); justId = id; }
   closeLog();
-  if (send && has) {
+  if (send && (has || img)) {
     cmode = 'last'; go('coach');
-    shareText(resultMsg(id));   // still inside the tap, so the share sheet is allowed to open
+    const d = dayDate(it.wi, it.di);
+    let msg = has ? resultMsg(id) : `${HEAD}\n${todayLine()}\n\nצילום מסך מהגרמין של ${LONG[it.k]} ביום ${DN[it.di]} ${fmt(d)} (שבוע ${it.wi+1}). מתוכנן: ${it.t}\n\n${weekBlock(curWeek(), 'השבוע')}\nמה דעתך?`;
+    if (img && has) msg = msg.replace(/\nמה דעתך\?$/, '\nמצורף צילום מסך מהגרמין.\nמה דעתך?');
+    // Still inside the tap, so the share sheet is allowed to open.
+    if (img && canShareFiles) {
+      const f = new File([img], img.name || 'garmin.jpg', {type: img.type || 'image/jpeg'});
+      navigator.share({text: msg, files: [f]}).catch(e => { if (!e || e.name !== 'AbortError') shareText(msg); });
+    } else shareText(msg);
   } else render();
 }
 
@@ -877,7 +1001,13 @@ document.querySelector('.tabs').addEventListener('click', e => {
   if (b.dataset.view === 'week' && view !== 'week') viewW = selW;
   go(b.dataset.view);
 });
+function clearCoachImg(){ if (coachImgUrl) try { URL.revokeObjectURL(coachImgUrl); } catch(e) {} coachImg = null; coachImgUrl = ''; }
 main.addEventListener('change', e => {
+  if (e.target.id === 'cimgin') {
+    const f = e.target.files && e.target.files[0]; e.target.value = '';
+    if (f) { clearCoachImg(); coachImg = f; coachImgUrl = URL.createObjectURL(f); render(); }
+    return;
+  }
   if (e.target.id !== 'impin') return;
   const f = e.target.files && e.target.files[0]; e.target.value = '';
   if (f) importBackup(f);
@@ -902,7 +1032,15 @@ main.addEventListener('click', e => {
   else if (a === 'wk') { viewW = +t.dataset.w; go('week'); }
   else if (a === 'open') { selW = +t.dataset.w; selD = +t.dataset.d; go('today'); }
   else if (a === 'mode') { cmode = t.dataset.m; render(); }
-  else if (a === 'share') { const b = document.getElementById('sumbox'); if (b) shareText(b.value); }
+  else if (a === 'share') {
+    const b = document.getElementById('sumbox'); if (!b) return;
+    if (coachImg && canShareFiles) {
+      const f = new File([coachImg], coachImg.name || 'garmin.jpg', {type: coachImg.type || 'image/jpeg'});
+      navigator.share({text: b.value, files: [f]}).then(() => { clearCoachImg(); render(); }).catch(e => { if (!e || e.name !== 'AbortError') shareText(b.value); });
+    } else shareText(b.value);
+  }
+  else if (a === 'cimg') { const f = document.getElementById('cimgin'); if (f) f.click(); }
+  else if (a === 'cimgx') { clearCoachImg(); render(); }
   else if (a === 'copy') { const b = document.getElementById('sumbox'); if (b) copyText(b.value); }
   else if (a === 'export') { exportBackup(); }
   else if (a === 'hintx') { try { localStorage.setItem('tlv27hint', '1'); } catch(e) {} render(); }
